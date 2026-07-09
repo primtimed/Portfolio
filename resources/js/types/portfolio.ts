@@ -8,6 +8,7 @@ export interface ExperienceItem {
     title: string;
     meta: string;
     description: string;
+    tags?: string[];
 }
 
 export interface FeaturedGame {

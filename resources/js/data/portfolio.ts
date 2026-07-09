@@ -277,29 +277,34 @@ export const experience: ExperienceItem[] = [
         meta: 'Personal Project',
         description:
             'Built a multiplayer FPS prototype with a custom momentum-driven movement system — wallrun, dash, grapple, slide.',
+        tags: ['Unity', 'C#', 'Netcode', 'Multiplayer'],
     },
     {
         title: 'AI Windows Tool',
         meta: 'Personal Project',
         description:
             'Developed an AI-assisted Windows tool system in C# with safe, auditable, undoable actions.',
+        tags: ['C#', 'AI-Assisted Tooling', 'Windows Tooling'],
     },
     {
         title: 'Card Strategy Game — Adaptive AI',
         meta: 'Personal Project',
         description:
             'Designed a card-based strategy game with adaptive AI logic that profiles player behavior mid-match.',
+        tags: ['Unity', 'C#', 'AI', 'Card Game'],
     },
     {
         title: 'Streaming Hub UI',
         meta: 'Personal Project',
         description:
             'Created a web-based, remote-navigable streaming hub UI system built for TV-first browsing.',
+        tags: ['Vue', 'TypeScript', 'TV UI'],
     },
     {
         title: 'Unity Architecture Patterns',
         meta: 'Ongoing',
         description:
             'Implemented scalable Unity architecture patterns — state machines, modular, component-based systems.',
+        tags: ['Unity', 'C#', 'Architecture'],
     },
 ];

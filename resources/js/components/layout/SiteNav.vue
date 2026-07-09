@@ -49,13 +49,15 @@
                 <a
                     v-else
                     :href="link.href"
+                    rel="noopener noreferrer"
                     class="nav-link"
                     :class="{ active: (onHome && activeId === link.id) || currentPath === link.href }"
-                    >{{ link.label }}</a
                 >
+                    {{ link.label }}
+                </a>
             </template>
         </div>
-        <a href="/portfolio" class="nav-cta">Portfolio</a>
+        <a href="/resume" target="_blank" class="nav-cta">My Resume</a>
     </nav>
 </template>
 
@@ -75,6 +77,7 @@ const lastName = computed(() =>
 const links = [
     { label: 'Home', href: '/', id: 'top' },
     { label: 'Projects', href: '/portfolio', id: 'projects' },
+    { label: 'Resume', href: '/resume', id: 'resume' },
     {
         label: 'Hobbies',
         dropdown: [
