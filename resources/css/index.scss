@@ -1,0 +1,45 @@
+/* ── Color tokens ────────────────────────────────────────────────────────────
+   The only place colors are defined. Components reference these via var(...)
+   in their own scoped <style lang="scss"> blocks — never hardcode a color
+   anywhere else. Black / white / orange only — no blue-gray tints. */
+.root {
+    --accent: #ff7a29;
+    --accent-ink: #1a0e05;
+    --bg: #000000;
+    --bg-sunken: #0d0d0d;
+    --bg-hover: #1c1c1c;
+    --border: #262626;
+    --border-strong: #404040;
+    --text: #ffffff;
+    --text-dim: #b0b0b0;
+    --text-faint: #737373;
+
+    color: var(--text);
+}
+
+body {
+    background: var(--bg, #000000);
+    color: var(--text, #ffffff);
+}
+
+::selection {
+    background: var(--accent, #ff7a29);
+    color: var(--accent-ink, #1a0e05);
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg, #000000);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--border-strong, #404040);
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #545454;
+}
+
+/* ── Color-only utility classes ───────────────────────────────────────────────
+   Tiny, single-purpose color helpers shared across components. Anything with
+   layout, spacing, or typography beyond color belongs in the component itself. */
+.accent-text {
+    color: var(--accent);
+}

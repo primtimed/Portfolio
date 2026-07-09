@@ -1,0 +1,29 @@
+/* Tiny, unavoidable document-level reset that can't live inside a single
+   component (it has to apply before any component mounts). Everything else —
+   including all colors — lives in index.scss or the owning component. */
+html {
+    scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+}
+
+body {
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+:focus-visible {
+    outline-width: 2px;
+    outline-style: solid;
+    outline-offset: 2px;
+    outline-color: var(--accent, #ff7a29);
+}
