@@ -244,9 +244,10 @@ onUnmounted(() => {
 }
 
 .games-heading {
+    max-width: 1200px;
     padding: 0 32px;
     width: 100%;
-    margin: 0 0 40px;
+    margin: 0 auto 40px;
     text-align: center;
 }
 
@@ -298,10 +299,10 @@ onUnmounted(() => {
     color: var(--text);
     cursor: pointer;
     transition:
-        background 0.15s,
-        border-color 0.15s,
-        opacity 0.15s,
-        transform 0.15s;
+        background 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+        border-color 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
 
     &:hover {
         border-color: var(--accent);
@@ -373,19 +374,19 @@ onUnmounted(() => {
     width: 320px;
     aspect-ratio: 2 / 3;
     scroll-snap-align: start;
-    border-radius: 16px;
+    border-radius: 14px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
     text-decoration: none;
     color: var(--text);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.3);
     transition:
-        transform 0.25s ease,
-        box-shadow 0.25s ease,
-        opacity 0.25s ease,
-        filter 0.25s ease;
+        transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+        filter 0.25s cubic-bezier(0.22, 1, 0.36, 1);
 
     &--art1 {
         background-color: #c23f1c;
@@ -403,7 +404,7 @@ onUnmounted(() => {
     &:hover,
     &:focus-visible {
         transform: scale(1.06) translateY(-6px);
-        box-shadow: 0 18px 34px rgba(0, 0, 0, 0.45);
+        box-shadow: 0 18px 36px rgba(0, 0, 0, 0.42);
         z-index: 1;
         outline: 2px solid var(--accent);
         outline-offset: 2px;

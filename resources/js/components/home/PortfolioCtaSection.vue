@@ -92,14 +92,10 @@ const cta = portfolioCta;
     letter-spacing: 0.04em;
     text-transform: uppercase;
     text-decoration: none;
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
-    transition:
-        transform 0.15s ease,
-        box-shadow 0.15s ease;
+    transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
 
     &:hover {
         transform: translateY(-2px);
-        box-shadow: 0 16px 34px rgba(0, 0, 0, 0.4);
     }
 }
 </style>

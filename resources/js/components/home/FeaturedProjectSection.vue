@@ -189,6 +189,10 @@ const stats = featuredProjectStats;
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(200px, 750px);
     align-items: stretch;
+
+    @media (max-width: 960px) {
+        grid-template-columns: 1fr;
+    }
 }
 
 .spotlight-content {
@@ -196,8 +200,15 @@ const stats = featuredProjectStats;
     gap: 40px;
     align-items: stretch;
     align-self: center;
-    margin-left: 15rem;
-    margin-right: 5rem;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 56px;
+
+    @media (max-width: 760px) {
+        flex-direction: column;
+        padding: 48px 24px;
+    }
 }
 
 .spotlight-stats {
@@ -207,6 +218,15 @@ const stats = featuredProjectStats;
     gap: 30px;
     padding-right: 40px;
     border-right: 1px solid var(--border);
+
+    @media (max-width: 760px) {
+        flex-direction: row;
+        flex-wrap: wrap;
+        padding-right: 0;
+        padding-bottom: 24px;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+    }
 }
 
 .spotlight-stat {
@@ -354,8 +374,8 @@ const stats = featuredProjectStats;
     font-weight: 600;
     text-decoration: none;
     transition:
-        border-color 0.15s,
-        background 0.15s;
+        border-color 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+        background 0.25s cubic-bezier(0.22, 1, 0.36, 1);
 
     &:hover {
         border-color: var(--accent);

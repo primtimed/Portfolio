@@ -95,7 +95,7 @@ defineProps<{ items: ExperienceItem[] }>();
 
 .timeline-wrap {
     position: relative;
-    max-width: 1120px;
+    max-width: 1200px;
     margin: 0 auto;
 }
 
@@ -213,8 +213,8 @@ defineProps<{ items: ExperienceItem[] }>();
     text-transform: uppercase;
     text-decoration: none;
     transition:
-        background 0.15s,
-        transform 0.15s;
+        background 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
 
     &:hover {
         background: var(--accent);

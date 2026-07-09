@@ -80,7 +80,7 @@ function bar(level: number) {
 }
 
 .skills-layout {
-    max-width: 1080px;
+    max-width: 1200px;
     margin: 0 auto;
     display: grid;
     grid-template-columns: minmax(0, 280px) minmax(0, 1fr);
@@ -120,11 +120,10 @@ function bar(level: number) {
 }
 
 .skills-terminal {
-    border-radius: 12px;
+    border-radius: 14px;
     overflow: hidden;
     border: 1px solid var(--border-strong);
     background: #ffffff;
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.08);
 }
 
 .skills-terminal-bar {
@@ -205,10 +204,10 @@ function bar(level: number) {
     font-size: 14px;
     font-weight: 500;
     transition:
-        border-color 0.15s,
-        background 0.15s,
-        color 0.15s,
-        transform 0.15s;
+        border-color 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+        background 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+        color 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
 
     &:hover {
         border-color: var(--accent);
