@@ -203,6 +203,19 @@ export const projects: Project[] = [
         ],
         url: '#',
         sourceUrl: '#',
+        media: [
+            { type: 'image', src: 'https://picsum.photos/seed/momentum-fps/800/1000', caption: 'Momentum FPS — cover art' },
+            {
+                type: 'video',
+                src: 'https://www.w3schools.com/html/mov_bbb.mp4',
+                caption: 'Gameplay clip (sample video)',
+            },
+            { type: 'image', src: 'https://picsum.photos/seed/momentum-fps-wallrun/1200/800', caption: 'Wallrun chained into a dash' },
+            { type: 'image', src: 'https://picsum.photos/seed/momentum-fps-netcode/1200/800', caption: 'Client-side prediction debug view' },
+            { type: 'image', src: 'https://picsum.photos/seed/momentum-fps-grapple/1200/800', caption: 'Grapple + slide combo' },
+            { type: 'image', src: 'https://picsum.photos/seed/momentum-fps-map/1200/800', caption: 'Map greybox pass' },
+            { type: 'image', src: 'https://picsum.photos/seed/momentum-fps-hud/1200/800', caption: 'HUD and movement readout' },
+        ],
     },
     {
         title: 'Card Tactics AI',
@@ -221,6 +234,13 @@ export const projects: Project[] = [
         ],
         url: '#',
         sourceUrl: '#',
+        media: [
+            { type: 'image', src: 'https://picsum.photos/seed/card-tactics-ai/800/1000', caption: 'Card Tactics AI — cover art' },
+            { type: 'image', src: 'https://picsum.photos/seed/card-tactics-board/1200/800', caption: 'Match board mid-turn' },
+            { type: 'image', src: 'https://picsum.photos/seed/card-tactics-ai-profile/1200/800', caption: 'AI playstyle profiling view' },
+            { type: 'image', src: 'https://picsum.photos/seed/card-tactics-deck/1200/800', caption: 'Deck builder screen' },
+            { type: 'image', src: 'https://picsum.photos/seed/card-tactics-effects/1200/800', caption: 'Modular card effect stack' },
+        ],
     },
     {
         title: 'Streaming Hub UI',
@@ -239,6 +259,13 @@ export const projects: Project[] = [
         ],
         url: '#',
         sourceUrl: '#',
+        media: [
+            { type: 'image', src: 'https://picsum.photos/seed/streaming-hub-ui/800/1000', caption: 'Streaming Hub UI — cover art' },
+            { type: 'image', src: 'https://picsum.photos/seed/streaming-hub-rows/1200/800', caption: 'Row-based content browsing' },
+            { type: 'image', src: 'https://picsum.photos/seed/streaming-hub-focus/1200/800', caption: 'TV-safe focus states' },
+            { type: 'image', src: 'https://picsum.photos/seed/streaming-hub-remote/1200/800', caption: 'Remote navigation overlay' },
+            { type: 'image', src: 'https://picsum.photos/seed/streaming-hub-detail/1200/800', caption: 'Title detail panel' },
+        ],
     },
     {
         title: 'Architecture Sandbox',
@@ -257,6 +284,13 @@ export const projects: Project[] = [
         ],
         url: '#',
         sourceUrl: '#',
+        media: [
+            { type: 'image', src: 'https://picsum.photos/seed/architecture-sandbox/800/1000', caption: 'Architecture Sandbox — cover art' },
+            { type: 'image', src: 'https://picsum.photos/seed/architecture-sandbox-fsm/1200/800', caption: 'State machine visualizer' },
+            { type: 'image', src: 'https://picsum.photos/seed/architecture-sandbox-demo/1200/800', caption: 'Playable pattern demo scene' },
+            { type: 'image', src: 'https://picsum.photos/seed/architecture-sandbox-components/1200/800', caption: 'Component composition view' },
+            { type: 'image', src: 'https://picsum.photos/seed/architecture-sandbox-scenes/1200/800', caption: 'Scene selection menu' },
+        ],
     },
 ];
 

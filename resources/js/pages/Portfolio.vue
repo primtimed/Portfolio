@@ -110,10 +110,16 @@
                         </div>
                     </section>
 
-                    <section class="ps-card card-preview">
+                    <button type="button" class="ps-card card-preview" @click="lightboxOpen = true">
                         <span class="card-head card-head-overlay">Preview</span>
                         <img class="card-preview-img" :src="activeProject.image" :alt="`${activeProject.title} preview`" loading="lazy" />
-                    </section>
+                        <span class="card-preview-hint">
+                            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6">
+                                <path d="M9 4H4v5M15 4h5v5M9 20H4v-5M15 20h5v-5" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                            View all media
+                        </span>
+                    </button>
 
                     <section class="ps-card card-catalog">
                         <div class="card-catalog-content">
@@ -169,18 +175,28 @@
         </main>
 
         <SiteFooter />
+
+        <MediaLightbox :open="lightboxOpen" :items="activeMedia" @close="lightboxOpen = false" />
     </div>
 </template>
 
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
+import MediaLightbox from '@/components/ui/MediaLightbox.vue';
 import SiteFooter from '@/components/layout/SiteFooter.vue';
 import SiteNav from '@/components/layout/SiteNav.vue';
 import { profile, projects } from '@/data/portfolio';
+import type { ProjectMediaItem } from '@/types/portfolio';
 
 const activeIndex = ref(0);
 const activeProject = computed(() => projects[activeIndex.value]);
+
+const activeMedia = computed<ProjectMediaItem[]>(
+    () => activeProject.value.media ?? [{ type: 'image', src: activeProject.value.image, caption: activeProject.value.title }],
+);
+
+const lightboxOpen = ref(false);
 
 function select(i: number) {
     activeIndex.value = i;
@@ -565,6 +581,41 @@ function statusProgress(status: string) {
     position: relative;
     overflow: hidden;
     min-height: 180px;
+    display: block;
+    width: 100%;
+    padding: 0;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+
+    &:hover .card-preview-img {
+        transform: scale(1.05);
+    }
+
+    &:hover .card-preview-hint {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card-preview-hint {
+    position: absolute;
+    inset: auto 0 0 0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+    padding: 12px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.65) 0%, transparent 100%);
+    opacity: 0;
+    transform: translateY(6px);
+    transition:
+        opacity 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .card-head-overlay {
@@ -586,6 +637,7 @@ function statusProgress(status: string) {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .card-catalog {

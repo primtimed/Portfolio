@@ -44,6 +44,12 @@ export interface SkillCategory {
     skills: Skill[];
 }
 
+export interface ProjectMediaItem {
+    type: 'image' | 'video';
+    src: string;
+    caption?: string;
+}
+
 export interface Project {
     title: string;
     tagline: string;
@@ -56,4 +62,5 @@ export interface Project {
     highlights: string[];
     url: string;
     sourceUrl?: string;
+    media?: ProjectMediaItem[];
 }

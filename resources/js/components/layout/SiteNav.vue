@@ -77,7 +77,6 @@ const lastName = computed(() =>
 const links = [
     { label: 'Home', href: '/', id: 'top' },
     { label: 'Projects', href: '/portfolio', id: 'projects' },
-    { label: 'Resume', href: '/resume', id: 'resume' },
     {
         label: 'Hobbies',
         dropdown: [
