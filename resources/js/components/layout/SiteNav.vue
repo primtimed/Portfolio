@@ -78,12 +78,11 @@ const lastName = computed(() =>
 
 const links = [
     { label: 'Home', href: '/', id: 'top' },
-    { label: 'Projects', href: '/portfolio', id: 'projects' },
     {
-        label: 'Projects 2.0',
+        label: 'Projects',
         dropdown: projects.map((project) => ({
             label: project.title,
-            href: `/portfolio-lab/${projectSlug(project.title)}`,
+            href: `/project/${projectSlug(project.title)}`,
         })),
     },
     {
