@@ -24,6 +24,12 @@ export default defineConfig({
                 bunny('Montserrat', {
                     weights: [400, 500, 600, 700, 800],
                 }),
+                bunny('Archivo Black', {
+                    weights: [400],
+                }),
+                bunny('Inter', {
+                    weights: [400, 500, 600, 700, 800],
+                }),
             ],
         }),
         inertia(),

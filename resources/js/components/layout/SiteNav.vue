@@ -16,12 +16,12 @@
                     <button
                         type="button"
                         class="nav-link nav-dropdown-toggle"
-                        @click="toggleDropdown"
+                        @click="toggleDropdown(link.label)"
                     >
                         {{ link.label }}
                         <svg
                             class="nav-chevron"
-                            :class="{ open: dropdownOpen }"
+                            :class="{ open: openDropdown === link.label }"
                             width="10"
                             height="6"
                             viewBox="0 0 10 6"
@@ -36,7 +36,7 @@
                             />
                         </svg>
                     </button>
-                    <div v-if="dropdownOpen" class="nav-dropdown-menu">
+                    <div v-if="openDropdown === link.label" class="nav-dropdown-menu">
                         <a
                             v-for="item in link.dropdown"
                             :key="item.label"
@@ -64,6 +64,8 @@
 <script setup lang="ts">
 import { usePage } from '@inertiajs/vue3';
 import { computed, onMounted, onUnmounted, ref } from 'vue';
+import { hobbies } from '@/data/hobbies';
+import { projects, projectSlug } from '@/data/portfolio';
 
 const props = defineProps<{ name: string; onHome?: boolean }>();
 
@@ -78,15 +80,23 @@ const links = [
     { label: 'Home', href: '/', id: 'top' },
     { label: 'Projects', href: '/portfolio', id: 'projects' },
     {
+        label: 'Projects 2.0',
+        dropdown: projects.map((project) => ({
+            label: project.title,
+            href: `/portfolio-lab/${projectSlug(project.title)}`,
+        })),
+    },
+    {
         label: 'Hobbies',
-        dropdown: [
-            { label: 'Photography', href: '/hobbies/photography' },
-        ],
+        dropdown: hobbies.map((hobby) => ({
+            label: hobby.title,
+            href: `/hobbies/${hobby.slug}`,
+        })),
     },
 ];
 
 const activeId = ref('top');
-const dropdownOpen = ref(false);
+const openDropdown = ref<string | null>(null);
 const scrollProgress = ref(0);
 const scrolled = ref(false);
 const FADE_DISTANCE = 320;
@@ -94,8 +104,8 @@ const SHRINK_THRESHOLD = 20;
 let observer: IntersectionObserver | null = null;
 let ticking = false;
 
-function toggleDropdown() {
-    dropdownOpen.value = !dropdownOpen.value;
+function toggleDropdown(label: string) {
+    openDropdown.value = openDropdown.value === label ? null : label;
 }
 
 function updateScrollProgress() {

@@ -167,7 +167,7 @@ const stats = featuredProjectStats;
 
 <style lang="scss" scoped>
 .spotlight-section {
-    --bg: #ffffff;
+    --bg: #f7f3ec;
     --bg-sunken: #f2f2f2;
     --bg-hover: #ececec;
     --border: #e5e5e5;

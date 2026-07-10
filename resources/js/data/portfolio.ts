@@ -1,5 +1,12 @@
 import type { AboutStat, ExperienceItem, FeaturedGame, FeaturedProject, Project, SkillCategory } from '@/types/portfolio';
 
+export function projectSlug(title: string): string {
+    return title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '');
+}
+
 export const profile = {
     name: 'Brian Olthof',
     tagline: 'Software & Game engineering',

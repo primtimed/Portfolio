@@ -64,7 +64,7 @@ function bar(level: number) {
 
 <style lang="scss" scoped>
 .skills-section {
-    --bg: #ffffff;
+    --bg: #f7f3ec;
     --bg-sunken: #f2f2f2;
     --bg-hover: #ececec;
     --border: #e5e5e5;
@@ -122,7 +122,7 @@ function bar(level: number) {
 .skills-terminal {
     border-radius: 14px;
     overflow: hidden;
-    border: 1px solid var(--border-strong);
+    border: 1px solid var(--bg);
     background: #ffffff;
 }
 
