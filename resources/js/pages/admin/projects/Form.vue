@@ -231,7 +231,7 @@ import AdminSelect from '@/components/admin/AdminSelect.vue';
 import AdminStringList from '@/components/admin/AdminStringList.vue';
 import AdminTextarea from '@/components/admin/AdminTextarea.vue';
 import { useAdminPreviewPublisher, useAdminPreviewScrollSync } from '@/composables/useAdminPreview';
-import { projectSlug } from '@/data/portfolio';
+import { projectSlug } from '@/data/projects';
 import AdminLayout from '@/layouts/AdminLayout.vue';
 import { index as projectsIndex, store, update } from '@/routes/admin/projects';
 import type { Project, ProjectMediaItem, ProjectProcessStep, ProjectStat } from '@/types/portfolio';

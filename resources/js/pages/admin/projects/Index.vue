@@ -54,7 +54,7 @@
 <script setup lang="ts">
 import { Head, router } from '@inertiajs/vue3';
 import AdminButton from '@/components/admin/AdminButton.vue';
-import { projectSlug } from '@/data/portfolio';
+import { projectSlug } from '@/data/projects';
 import AdminLayout from '@/layouts/AdminLayout.vue';
 import { create, destroy as destroyRoute, edit } from '@/routes/admin/projects';
 import type { Project } from '@/types/portfolio';

@@ -74,7 +74,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import RevealOnView from '@/components/ui/RevealOnView.vue';
-import { projects } from '@/data/portfolio';
+import { projects } from '@/data/projects';
 
 const openIndex = ref<number | null>(0);
 

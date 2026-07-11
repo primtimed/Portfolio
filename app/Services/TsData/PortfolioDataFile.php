@@ -2,13 +2,10 @@
 
 namespace App\Services\TsData;
 
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
 class PortfolioDataFile extends TsDataFile
 {
     /**
-     * Every field in this list except "projects" is edited as one big form
-     * (the "portfolio meta" page). Order here is the order they're written to disk.
+     * Order here is the order fields are written to disk.
      */
     private const EXPORTS = [
         'profile' => null,
@@ -19,7 +16,6 @@ class PortfolioDataFile extends TsDataFile
         'featuredGames' => 'FeaturedGame[]',
         'featuredProject' => 'FeaturedProject',
         'featuredProjectStats' => 'AboutStat[]',
-        'projects' => 'Project[]',
         'portfolioCta' => null,
         'experience' => 'ExperienceItem[]',
     ];
@@ -32,14 +28,7 @@ class PortfolioDataFile extends TsDataFile
     protected function header(): string
     {
         return <<<'TS'
-        import type { AboutStat, ExperienceItem, FeaturedGame, FeaturedProject, Project, SkillCategory } from '@/types/portfolio';
-
-        export function projectSlug(title: string): string {
-            return title
-                .toLowerCase()
-                .replace(/[^a-z0-9]+/g, '-')
-                .replace(/(^-|-$)/g, '');
-        }
+        import type { AboutStat, ExperienceItem, FeaturedGame, FeaturedProject, SkillCategory } from '@/types/portfolio';
         TS;
     }
 
@@ -49,72 +38,18 @@ class PortfolioDataFile extends TsDataFile
     }
 
     /**
-     * @return array<string, mixed> all data except the "projects" list
+     * @return array<string, mixed>
      */
     public function meta(): array
     {
-        $data = $this->read();
-        unset($data['projects']);
-
-        return $data;
+        return $this->read();
     }
 
     /**
-     * @param  array<string, mixed>  $meta  everything except "projects"
+     * @param  array<string, mixed>  $meta
      */
     public function updateMeta(array $meta): void
     {
-        $data = $this->read();
-        $this->write([...$data, ...$meta, 'projects' => $data['projects']]);
-    }
-
-    /**
-     * @return array<int, array<string, mixed>>
-     */
-    public function projects(): array
-    {
-        return array_values($this->read()['projects']);
-    }
-
-    public function project(int $index): array
-    {
-        return $this->projects()[$index] ?? throw new NotFoundHttpException('Project not found.');
-    }
-
-    /**
-     * @param  array<string, mixed>  $project
-     */
-    public function addProject(array $project): void
-    {
-        $data = $this->read();
-        $data['projects'][] = $project;
-        $this->write($data);
-    }
-
-    /**
-     * @param  array<string, mixed>  $project
-     */
-    public function updateProject(int $index, array $project): void
-    {
-        $data = $this->read();
-
-        if (! array_key_exists($index, $data['projects'])) {
-            throw new NotFoundHttpException('Project not found.');
-        }
-
-        $data['projects'][$index] = $project;
-        $this->write($data);
-    }
-
-    public function deleteProject(int $index): void
-    {
-        $data = $this->read();
-
-        if (! array_key_exists($index, $data['projects'])) {
-            throw new NotFoundHttpException('Project not found.');
-        }
-
-        array_splice($data['projects'], $index, 1);
-        $this->write($data);
+        $this->write([...$this->read(), ...$meta]);
     }
 }

@@ -76,7 +76,17 @@ import type { Hobby } from '@/types/hobby';
 
 const props = defineProps<{ slug: string }>();
 
-const baseHobby = hobbies.find((h) => h.slug === props.slug) ?? hobbies[0];
+const blankHobby: Hobby = {
+    slug: '',
+    title: '',
+    tagline: '',
+    heroImage: '',
+    description: [],
+    stats: [],
+    gallery: [],
+};
+
+const baseHobby = hobbies.find((h) => h.slug === props.slug) ?? hobbies[0] ?? blankHobby;
 const overrides = useAdminPreviewOverrides<{ hobby: Hobby }>('hobby');
 useAdminPreviewScrollTarget();
 

@@ -135,12 +135,26 @@ import SiteFooter from '@/components/layout/SiteFooter.vue';
 import SiteNav from '@/components/layout/SiteNav.vue';
 import SiteVideoBackground from '@/components/layout/SiteVideoBackground.vue';
 import { useAdminPreviewOverrides, useAdminPreviewScrollTarget } from '@/composables/useAdminPreview';
-import { profile, projects, projectSlug } from '@/data/portfolio';
+import { profile } from '@/data/portfolio';
+import { projects, projectSlug } from '@/data/projects';
 import type { Project } from '@/types/portfolio';
 
 const props = defineProps<{ slug: string }>();
 
-const baseProject = projects.find((p) => projectSlug(p.title) === props.slug) ?? projects[0];
+const blankProject: Project = {
+    title: '',
+    tagline: '',
+    description: '',
+    genre: '',
+    engine: '',
+    status: 'Prototype',
+    image: '',
+    tags: [],
+    highlights: [],
+    url: '',
+};
+
+const baseProject = projects.find((p) => projectSlug(p.title) === props.slug) ?? projects[0] ?? blankProject;
 const overrides = useAdminPreviewOverrides<{ project: Project }>('project');
 useAdminPreviewScrollTarget();
 

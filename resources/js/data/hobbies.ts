@@ -176,5 +176,14 @@ export const hobbies: Hobby[] = [
                 "caption": "Placeholder caption"
             }
         ]
+    },
+    {
+        "slug": "sample-hobby",
+        "title": "Sample Hobby",
+        "tagline": "Placeholder hobby — replace with something real.",
+        "heroImage": null,
+        "description": [],
+        "stats": [],
+        "gallery": []
     }
 ];

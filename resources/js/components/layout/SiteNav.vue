@@ -80,7 +80,7 @@
 import { usePage } from '@inertiajs/vue3';
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { hobbies } from '@/data/hobbies';
-import { projects, projectSlug } from '@/data/portfolio';
+import { projects, projectSlug } from '@/data/projects';
 
 const props = defineProps<{ name: string; onHome?: boolean }>();
 

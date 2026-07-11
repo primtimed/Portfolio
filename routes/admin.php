@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('login', [AdminAuthController::class, 'create'])->name('login');
     Route::post('login', [AdminAuthController::class, 'store'])
-        ->middleware('throttle:6,1')
         ->name('login.store');
 
     Route::middleware('admin.auth')->group(function () {
