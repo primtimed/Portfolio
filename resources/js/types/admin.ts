@@ -1,5 +1,6 @@
 import type {
     AboutStat,
+    EducationItem,
     ExperienceItem,
     FeaturedGame,
     FeaturedProject,
@@ -15,6 +16,7 @@ export interface Profile {
     github: string;
     linkedin: string;
     backgroundVideoUrl: string;
+    photoUrl: string;
     aboutEyebrow: string;
     aboutHeading: string;
     aboutParagraphs: string[];
@@ -41,4 +43,5 @@ export interface PortfolioMeta {
     featuredProjectStats: AboutStat[];
     portfolioCta: PortfolioCta;
     experience: ExperienceItem[];
+    education: EducationItem[];
 }

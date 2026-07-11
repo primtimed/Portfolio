@@ -27,6 +27,7 @@ class PortfolioMetaRequest extends FormRequest
             'profile.github' => ['nullable', 'string'],
             'profile.linkedin' => ['nullable', 'string'],
             'profile.backgroundVideoUrl' => ['nullable', 'string'],
+            'profile.photoUrl' => ['nullable', 'string'],
             'profile.aboutEyebrow' => ['nullable', 'string'],
             'profile.aboutHeading' => ['nullable', 'string'],
             'profile.aboutParagraphs' => ['present', 'array'],
@@ -90,6 +91,12 @@ class PortfolioMetaRequest extends FormRequest
             'experience.*.description' => ['nullable', 'string'],
             'experience.*.tags' => ['nullable', 'array'],
             'experience.*.tags.*' => ['nullable', 'string'],
+
+            'education' => ['present', 'array'],
+            'education.*.title' => ['nullable', 'string'],
+            'education.*.institution' => ['nullable', 'string'],
+            'education.*.meta' => ['nullable', 'string'],
+            'education.*.description' => ['nullable', 'string'],
         ];
     }
 }

@@ -111,34 +111,42 @@
             </div>
 
             <div class="about-media">
-                <svg
-                    class="about-media-illustration"
-                    viewBox="0 0 120 120"
-                    fill="none"
-                >
-                    <circle
-                        cx="60"
-                        cy="60"
-                        r="58"
-                        stroke="currentColor"
-                        stroke-width="1.5"
-                        opacity="0.3"
-                    />
-                    <circle
-                        cx="60"
-                        cy="46"
-                        r="20"
-                        stroke="currentColor"
-                        stroke-width="1.5"
-                    />
-                    <path
-                        d="M22 104c4-24 18-36 38-36s34 12 38 36"
-                        stroke="currentColor"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                    />
-                </svg>
-                <span class="about-media-caption">add your photo here</span>
+                <img
+                    v-if="profile.photoUrl"
+                    :src="profile.photoUrl"
+                    :alt="profile.name"
+                    class="about-media-photo"
+                />
+                <template v-else>
+                    <svg
+                        class="about-media-illustration"
+                        viewBox="0 0 120 120"
+                        fill="none"
+                    >
+                        <circle
+                            cx="60"
+                            cy="60"
+                            r="58"
+                            stroke="currentColor"
+                            stroke-width="1.5"
+                            opacity="0.3"
+                        />
+                        <circle
+                            cx="60"
+                            cy="46"
+                            r="20"
+                            stroke="currentColor"
+                            stroke-width="1.5"
+                        />
+                        <path
+                            d="M22 104c4-24 18-36 38-36s34 12 38 36"
+                            stroke="currentColor"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                        />
+                    </svg>
+                    <span class="about-media-caption">add your photo here</span>
+                </template>
             </div>
         </div>
     </section>
@@ -380,6 +388,14 @@ function renderBold(text: string) {
     width: 96px;
     height: 96px;
     color: var(--text-faint);
+}
+
+.about-media-photo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .about-media-caption {

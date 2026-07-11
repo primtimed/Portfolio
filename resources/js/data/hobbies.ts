@@ -181,7 +181,7 @@ export const hobbies: Hobby[] = [
         "slug": "sample-hobby",
         "title": "Sample Hobby",
         "tagline": "Placeholder hobby — replace with something real.",
-        "heroImage": null,
+        "heroImage": "https://cdn.discordapp.com/attachments/1284942705453039646/1521641545827352607/file_00000000eb0071f4a8edb88e75140392_1.png?ex=6a54131f&is=6a52c19f&hm=10b23d24ea47c258b15161233c0d12f8dacef3e1e34d9b0aa1a08b02067f398c&",
         "description": [],
         "stats": [],
         "gallery": []

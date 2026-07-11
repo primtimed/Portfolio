@@ -24,6 +24,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('content', [AdminPortfolioMetaController::class, 'edit'])->name('portfolio-meta.edit');
         Route::put('content', [AdminPortfolioMetaController::class, 'update'])->name('portfolio-meta.update');
 
+        Route::get('resume', [AdminPortfolioMetaController::class, 'editResume'])->name('resume-content.edit');
+
         Route::resource('projects', AdminProjectController::class)
             ->except(['show'])
             ->parameters(['projects' => 'project']);

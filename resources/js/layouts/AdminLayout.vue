@@ -95,6 +95,7 @@ import { analytics, dashboard, logout } from '@/routes/admin';
 import { index as hobbiesIndex } from '@/routes/admin/hobbies';
 import { edit } from '@/routes/admin/portfolio-meta';
 import { index as projectsIndex } from '@/routes/admin/projects';
+import { edit as editResume } from '@/routes/admin/resume-content';
 
 withDefaults(defineProps<{ fullWidth?: boolean }>(), { fullWidth: false });
 
@@ -107,6 +108,7 @@ const navItems = [
     { label: 'Dashboard', href: dashboard().url },
     { label: 'Analytics', href: analytics().url },
     { label: 'Site content', href: edit().url },
+    { label: 'Resume', href: editResume().url },
     { label: 'Projects', href: projectsIndex().url },
     { label: 'Hobbies', href: hobbiesIndex().url },
 ];

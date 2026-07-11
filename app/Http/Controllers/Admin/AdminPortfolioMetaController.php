@@ -18,10 +18,17 @@ class AdminPortfolioMetaController extends Controller
         ]);
     }
 
+    public function editResume(PortfolioDataFile $portfolio): Response
+    {
+        return Inertia::render('admin/ResumeContent', [
+            'meta' => $portfolio->meta(),
+        ]);
+    }
+
     public function update(PortfolioMetaRequest $request, PortfolioDataFile $portfolio): RedirectResponse
     {
         $portfolio->updateMeta($request->validated());
 
-        return redirect()->route('admin.portfolio-meta.edit')->with('status', 'Portfolio content saved.');
+        return redirect()->back()->with('status', 'Portfolio content saved.');
     }
 }

@@ -11,6 +11,13 @@ export interface ExperienceItem {
     tags?: string[];
 }
 
+export interface EducationItem {
+    title: string;
+    institution: string;
+    meta: string;
+    description: string;
+}
+
 export interface FeaturedGame {
     title: string;
     tagline: string;

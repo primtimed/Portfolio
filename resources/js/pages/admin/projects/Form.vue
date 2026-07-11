@@ -111,11 +111,11 @@
                             /></AdminField>
 
                             <AdminField
-                                label="Background video URL"
+                                label="Background video/image URL"
                                 :error="form.errors.backgroundVideoUrl"
                                 ><AdminInput
                                     v-model="form.backgroundVideoUrl"
-                                    placeholder="Leave blank to use the site default"
+                                    placeholder="Video, YouTube link, or image URL — leave blank to use the site default"
                             /></AdminField>
 
                             <AdminField label="Description" :error="form.errors.description">

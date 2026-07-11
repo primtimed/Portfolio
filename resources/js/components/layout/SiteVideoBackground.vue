@@ -9,6 +9,13 @@
             allow="autoplay; encrypted-media"
             title=""
         ></iframe>
+        <img
+            v-else-if="isImage"
+            :key="src"
+            class="site-video-bg-el"
+            :src="src"
+            alt=""
+        />
         <video
             v-else-if="src && !reducedMotion"
             :key="src"
@@ -34,6 +41,14 @@ const reducedMotion = ref(false);
 const embedUrl = computed(() =>
     getYoutubeEmbedUrl(props.src, { autoplay: true, mute: true, loop: true, controls: false }),
 );
+
+const IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.avif', '.svg'];
+
+const isImage = computed(() => {
+    const path = props.src?.split(/[?#]/)[0].toLowerCase() ?? '';
+
+    return IMAGE_EXTENSIONS.some((ext) => path.endsWith(ext));
+});
 
 onMounted(() => {
     reducedMotion.value = window.matchMedia(

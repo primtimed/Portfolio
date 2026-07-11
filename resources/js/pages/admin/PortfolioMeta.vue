@@ -67,8 +67,10 @@
                         ><AdminInput v-model="form.profile.accent"
                     /></AdminField>
                 </div>
-                <AdminField label="Background video URL"
-                    ><AdminInput v-model="form.profile.backgroundVideoUrl"
+                <AdminField label="Background video/image URL"
+                    ><AdminInput
+                        v-model="form.profile.backgroundVideoUrl"
+                        placeholder="Video, YouTube link, or image URL"
                 /></AdminField>
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
                     <AdminField label="Email"
@@ -107,6 +109,11 @@
                 <AdminField label="About paragraphs">
                     <AdminStringList v-model="form.profile.aboutParagraphs" />
                 </AdminField>
+                <AdminField label="Photo URL"
+                    ><AdminInput
+                        v-model="form.profile.photoUrl"
+                        placeholder="Leave blank to show the placeholder icon"
+                /></AdminField>
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <AdminField label="About CTA prompt"
                         ><AdminInput v-model="form.profile.aboutCtaPrompt"

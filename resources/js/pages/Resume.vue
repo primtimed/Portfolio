@@ -69,18 +69,31 @@
 
                     <section class="rs-section">
                         <h2 class="rs-heading">Education</h2>
-                        <div class="rs-edu-placeholder">Add your education here</div>
+                        <div v-if="education.length === 0" class="rs-edu-placeholder">Add your education here</div>
+                        <div v-else class="rs-proj-list">
+                            <div v-for="item in education" :key="item.title" class="rs-proj-item">
+                                <div class="rs-proj-row">
+                                    <h3 class="rs-proj-title">{{ item.title }}</h3>
+                                    <span class="rs-proj-meta">{{ item.meta }}</span>
+                                </div>
+                                <p v-if="item.institution" class="rs-proj-tags">{{ item.institution }}</p>
+                                <p class="rs-proj-desc">{{ item.description }}</p>
+                            </div>
+                        </div>
                     </section>
                 </div>
 
                 <aside class="rs-sidebar">
                     <div class="rs-photo">
-                        <svg class="rs-photo-icon" viewBox="0 0 120 120" fill="none">
-                            <circle cx="60" cy="60" r="58" stroke="currentColor" stroke-width="1.5" opacity="0.4" />
-                            <circle cx="60" cy="46" r="20" stroke="currentColor" stroke-width="1.5" />
-                            <path d="M22 104c4-24 18-36 38-36s34 12 38 36" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-                        </svg>
-                        <span class="rs-photo-caption">add photo</span>
+                        <img v-if="profile.photoUrl" :src="profile.photoUrl" :alt="profile.name" class="rs-photo-img" />
+                        <template v-else>
+                            <svg class="rs-photo-icon" viewBox="0 0 120 120" fill="none">
+                                <circle cx="60" cy="60" r="58" stroke="currentColor" stroke-width="1.5" opacity="0.4" />
+                                <circle cx="60" cy="46" r="20" stroke="currentColor" stroke-width="1.5" />
+                                <path d="M22 104c4-24 18-36 38-36s34 12 38 36" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                            </svg>
+                            <span class="rs-photo-caption">add photo</span>
+                        </template>
                     </div>
 
                     <div class="rs-sidebar-section">
@@ -110,12 +123,29 @@
 
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
-import { ref } from 'vue';
-import { experience, focusTags, profile, skillCategories } from '@/data/portfolio';
+import { computed, ref } from 'vue';
+import { useAdminPreviewOverrides, useAdminPreviewScrollTarget } from '@/composables/useAdminPreview';
+import {
+    education as baseEducation,
+    experience as baseExperience,
+    focusTags as baseFocusTags,
+    profile as baseProfile,
+    skillCategories as baseSkillCategories,
+} from '@/data/portfolio';
 import { recordResumeDownload } from '@/lib/analytics';
+import type { PortfolioMeta } from '@/types/admin';
 
-const [firstName, ...restName] = profile.name.split(' ');
-const lastName = restName.join(' ');
+const overrides = useAdminPreviewOverrides<Pick<PortfolioMeta, 'profile' | 'experience' | 'focusTags' | 'skillCategories' | 'education'>>('portfolio-meta');
+useAdminPreviewScrollTarget();
+
+const profile = computed(() => overrides.profile ?? baseProfile);
+const experience = computed(() => overrides.experience ?? baseExperience);
+const focusTags = computed(() => overrides.focusTags ?? baseFocusTags);
+const skillCategories = computed(() => overrides.skillCategories ?? baseSkillCategories);
+const education = computed(() => overrides.education ?? baseEducation);
+
+const firstName = computed(() => profile.value.name.split(' ')[0]);
+const lastName = computed(() => profile.value.name.split(' ').slice(1).join(' '));
 
 const pageEl = ref<HTMLElement | null>(null);
 const isExporting = ref(false);
@@ -144,7 +174,7 @@ async function downloadPdf() {
         const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
         pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, pdfWidth, pdfHeight);
-        pdf.save(`${profile.name.replace(/\s+/g, '-')}-Resume.pdf`);
+        pdf.save(`${profile.value.name.replace(/\s+/g, '-')}-Resume.pdf`);
         recordResumeDownload();
     } finally {
         isExporting.value = false;
@@ -396,13 +426,21 @@ async function downloadPdf() {
 }
 
 .rs-photo-icon {
-    width: 84px;
-    height: 84px;
-    padding: 14px;
+    width: 168px;
+    height: 168px;
+    padding: 28px;
     border-radius: 50%;
     border: 1px dashed var(--sidebar-border);
     color: var(--sidebar-text-dim);
     box-sizing: border-box;
+}
+
+.rs-photo-img {
+    width: 168px;
+    height: 168px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid var(--sidebar-border);
 }
 
 .rs-photo-caption {
