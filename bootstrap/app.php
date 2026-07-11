@@ -23,6 +23,14 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin.auth' => EnsureAdminAuthenticated::class,
         ]);
+
+        // navigator.sendBeacon() can't attach a CSRF header, and these routes
+        // only ever append a page-view analytics entry.
+        $middleware->validateCsrfTokens(except: [
+            'analytics/view',
+            'analytics/view/*',
+            'analytics/resume-download',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

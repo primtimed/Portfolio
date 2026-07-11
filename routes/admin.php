@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminAnalyticsController;
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminHobbyController;
@@ -18,6 +19,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('logout', [AdminAuthController::class, 'destroy'])->name('logout');
 
         Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
+
+        Route::get('analytics', [AdminAnalyticsController::class, 'index'])->name('analytics');
 
         Route::get('content', [AdminPortfolioMetaController::class, 'edit'])->name('portfolio-meta.edit');
         Route::put('content', [AdminPortfolioMetaController::class, 'update'])->name('portfolio-meta.update');

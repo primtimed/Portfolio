@@ -25,7 +25,20 @@
             >
         </div>
 
-        <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-4">
+            <Link
+                :href="analytics().url"
+                class="rounded-xl border border-(--border) bg-(--bg-sunken) p-5 transition-colors hover:border-(--accent)"
+            >
+                <div
+                    class="text-[11px] font-semibold tracking-widest text-(--text-faint) uppercase [font-family:var(--font-mono)]"
+                >
+                    Analytics
+                </div>
+                <div class="mt-1 text-lg font-semibold">
+                    {{ totalViews }} view{{ totalViews === 1 ? '' : 's' }}
+                </div>
+            </Link>
             <Link
                 :href="edit().url"
                 class="rounded-xl border border-(--border) bg-(--bg-sunken) p-5 transition-colors hover:border-(--accent)"
@@ -93,12 +106,12 @@
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import AdminButton from '@/components/admin/AdminButton.vue';
 import AdminLayout from '@/layouts/AdminLayout.vue';
-import { rebuild } from '@/routes/admin';
+import { analytics, rebuild } from '@/routes/admin';
 import { index as hobbiesIndex } from '@/routes/admin/hobbies';
 import { edit } from '@/routes/admin/portfolio-meta';
 import { index as projectsIndex } from '@/routes/admin/projects';
 
-defineProps<{ projectCount: number; hobbyCount: number }>();
+defineProps<{ projectCount: number; hobbyCount: number; totalViews: number }>();
 
 const rebuildForm = useForm(rebuild(), {});
 </script>

@@ -112,6 +112,7 @@
 import { Head } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import { experience, focusTags, profile, skillCategories } from '@/data/portfolio';
+import { recordResumeDownload } from '@/lib/analytics';
 
 const [firstName, ...restName] = profile.name.split(' ');
 const lastName = restName.join(' ');
@@ -144,6 +145,7 @@ async function downloadPdf() {
 
         pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, pdfWidth, pdfHeight);
         pdf.save(`${profile.name.replace(/\s+/g, '-')}-Resume.pdf`);
+        recordResumeDownload();
     } finally {
         isExporting.value = false;
     }

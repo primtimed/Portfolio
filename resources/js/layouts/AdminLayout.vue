@@ -91,7 +91,7 @@
 <script setup lang="ts">
 import { Link, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
-import { dashboard, logout } from '@/routes/admin';
+import { analytics, dashboard, logout } from '@/routes/admin';
 import { index as hobbiesIndex } from '@/routes/admin/hobbies';
 import { edit } from '@/routes/admin/portfolio-meta';
 import { index as projectsIndex } from '@/routes/admin/projects';
@@ -105,6 +105,7 @@ const flash = computed(() => page.props.flash ?? {});
 
 const navItems = [
     { label: 'Dashboard', href: dashboard().url },
+    { label: 'Analytics', href: analytics().url },
     { label: 'Site content', href: edit().url },
     { label: 'Projects', href: projectsIndex().url },
     { label: 'Hobbies', href: hobbiesIndex().url },

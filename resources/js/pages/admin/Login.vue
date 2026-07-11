@@ -27,15 +27,19 @@
                     <span class="text-(--accent)">Admin</span> login
                 </div>
                 <p class="mt-1 text-sm text-(--text-dim)">
-                    Enter the admin password to continue.
+                    Enter the 6-digit code from your authenticator app.
                 </p>
             </div>
 
-            <AdminField label="Password" :error="form.errors.password">
+            <AdminField label="Authentication code" :error="form.errors.code">
                 <AdminInput
-                    v-model="form.password"
-                    type="password"
-                    placeholder="••••••••"
+                    v-model="form.code"
+                    type="text"
+                    inputmode="numeric"
+                    autocomplete="one-time-code"
+                    pattern="[0-9]*"
+                    maxlength="6"
+                    placeholder="123456"
                     autofocus
                 />
             </AdminField>
@@ -59,7 +63,7 @@ import AdminField from '@/components/admin/AdminField.vue';
 import AdminInput from '@/components/admin/AdminInput.vue';
 import { store } from '@/routes/admin/login';
 
-const form = useForm(store(), { password: '' });
+const form = useForm(store(), { code: '' });
 
 function submit() {
     form.submit();

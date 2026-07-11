@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
+use PragmaRX\Google2FAQRCode\Google2FA;
 
 class AdminAuthController extends Controller
 {
@@ -19,14 +20,14 @@ class AdminAuthController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $credentials = $request->validate([
-            'password' => ['required', 'string'],
+            'code' => ['required', 'string', 'size:6'],
         ]);
 
-        $adminPassword = config('admin.password');
+        $secret = config('admin.totp_secret');
 
-        if (! $adminPassword || ! hash_equals($adminPassword, $credentials['password'])) {
+        if (! $secret || ! (new Google2FA)->verifyKey($secret, $credentials['code'])) {
             throw ValidationException::withMessages([
-                'password' => 'That password is incorrect.',
+                'code' => 'That code is incorrect or has expired.',
             ]);
         }
 
