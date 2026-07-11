@@ -156,13 +156,14 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
 import RevealOnView from '@/components/ui/RevealOnView.vue';
-import { featuredProjectStats } from '@/data/portfolio';
-import type { FeaturedProject } from '@/types/portfolio';
+import { featuredProjectStats as baseStats } from '@/data/portfolio';
+import type { AboutStat, FeaturedProject } from '@/types/portfolio';
 
-defineProps<{ project: FeaturedProject }>();
+const props = defineProps<{ project: FeaturedProject; stats?: AboutStat[] }>();
 
-const stats = featuredProjectStats;
+const stats = computed(() => props.stats ?? baseStats);
 </script>
 
 <style lang="scss" scoped>
@@ -187,7 +188,7 @@ const stats = featuredProjectStats;
     flex: 1 1 auto;
     width: 100%;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(200px, 750px);
+    grid-template-columns: minmax(0, 1fr) minmax(200px, clamp(320px, 42vw, 750px));
     align-items: stretch;
 
     @media (max-width: 960px) {
@@ -205,7 +206,7 @@ const stats = featuredProjectStats;
     margin: 0 auto;
     padding: 0 56px;
 
-    @media (max-width: 760px) {
+    @media (max-width: 960px) {
         flex-direction: column;
         padding: 48px 24px;
     }
@@ -219,9 +220,10 @@ const stats = featuredProjectStats;
     padding-right: 40px;
     border-right: 1px solid var(--border);
 
-    @media (max-width: 760px) {
+    @media (max-width: 960px) {
         flex-direction: row;
         flex-wrap: wrap;
+        justify-content: center;
         padding-right: 0;
         padding-bottom: 24px;
         border-right: none;

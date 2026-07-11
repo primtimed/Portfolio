@@ -1,7 +1,17 @@
 <template>
     <div class="site-video-bg">
+        <iframe
+            v-if="embedUrl && !reducedMotion"
+            :key="embedUrl"
+            class="site-video-bg-el site-video-bg-iframe"
+            :src="embedUrl"
+            frameborder="0"
+            allow="autoplay; encrypted-media"
+            title=""
+        ></iframe>
         <video
-            v-if="src && !reducedMotion"
+            v-else-if="src && !reducedMotion"
+            :key="src"
             class="site-video-bg-el"
             autoplay
             muted
@@ -14,11 +24,16 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
+import { getYoutubeEmbedUrl } from '@/lib/youtube';
 
-defineProps<{ src: string }>();
+const props = defineProps<{ src: string }>();
 
 const reducedMotion = ref(false);
+
+const embedUrl = computed(() =>
+    getYoutubeEmbedUrl(props.src, { autoplay: true, mute: true, loop: true, controls: false }),
+);
 
 onMounted(() => {
     reducedMotion.value = window.matchMedia(
@@ -42,6 +57,17 @@ onMounted(() => {
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+.site-video-bg-iframe {
+    top: 50%;
+    left: 50%;
+    width: 100vw;
+    height: 56.25vw; /* 16:9 */
+    min-height: 100vh;
+    min-width: 177.78vh; /* 16:9 */
+    transform: translate(-50%, -50%);
+    pointer-events: none;
 }
 
 .site-video-scrim {

@@ -20,10 +20,13 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
 import RevealOnView from '@/components/ui/RevealOnView.vue';
-import { portfolioCta } from '@/data/portfolio';
+import { portfolioCta as baseCta } from '@/data/portfolio';
 
-const cta = portfolioCta;
+const props = defineProps<{ cta?: typeof baseCta }>();
+
+const cta = computed(() => props.cta ?? baseCta);
 </script>
 
 <style lang="scss" scoped>

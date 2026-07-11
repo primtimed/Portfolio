@@ -52,10 +52,14 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
 import RevealOnView from '@/components/ui/RevealOnView.vue';
-import { skillCategories } from '@/data/portfolio';
+import { skillCategories as baseCategories } from '@/data/portfolio';
+import type { SkillCategory } from '@/types/portfolio';
 
-const categories = skillCategories;
+const props = defineProps<{ categories?: SkillCategory[] }>();
+
+const categories = computed(() => props.categories ?? baseCategories);
 
 function bar(level: number) {
     return '▰'.repeat(level) + '▱'.repeat(5 - level);
@@ -86,7 +90,7 @@ function bar(level: number) {
     grid-template-columns: minmax(0, 280px) minmax(0, 1fr);
     gap: 64px;
 
-    @media (max-width: 760px) {
+    @media (max-width: 960px) {
         grid-template-columns: 1fr;
         gap: 36px;
     }

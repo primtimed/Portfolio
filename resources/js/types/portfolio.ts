@@ -50,17 +50,31 @@ export interface ProjectMediaItem {
     caption?: string;
 }
 
+export interface ProjectStat {
+    label: string;
+    value: string;
+}
+
+export interface ProjectProcessStep {
+    title: string;
+    description: string;
+}
+
 export interface Project {
     title: string;
     tagline: string;
     description: string;
+    role?: string;
     genre: string;
     engine: string;
     status: 'Prototype' | 'In Development' | 'Released';
     image: string;
+    backgroundVideoUrl?: string;
     tags: string[];
     highlights: string[];
     url: string;
     sourceUrl?: string;
     media?: ProjectMediaItem[];
+    outcomes?: ProjectStat[];
+    processSteps?: ProjectProcessStep[];
 }

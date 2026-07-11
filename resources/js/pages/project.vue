@@ -5,7 +5,7 @@
     </Head>
 
     <div class="cs-root root" :style="{ '--accent': profile.accent }">
-        <SiteVideoBackground :src="profile.backgroundVideoUrl" />
+        <SiteVideoBackground :src="project.backgroundVideoUrl || profile.backgroundVideoUrl" />
 
         <SiteNav :name="profile.name" />
 
@@ -15,7 +15,7 @@
                 <a href="/portfolio-lab" class="cs-back-link">&larr; Back to Projects</a>
                 <div class="cs-eyebrow">Case Study</div>
                 <h1 class="cs-hero-title">{{ project.title }}</h1>
-                <p class="cs-hero-role"><span class="cs-accent-text">{{ project.genre }}</span> Engineer</p>
+                <p class="cs-hero-role"><span class="cs-accent-text">{{ role }}</span></p>
                 <div class="cs-tags">
                     <span v-for="tag in project.tags" :key="tag" class="cs-tag">{{ tag }}</span>
                 </div>
@@ -36,7 +36,7 @@
 
         <!-- META STRIP -->
         <section class="cs-meta-strip">
-            <div v-for="fact in metaFacts" :key="fact.label" class="cs-meta-item">
+            <div v-for="fact in metaStats" :key="fact.label" class="cs-meta-item">
                 <div class="cs-meta-label">{{ fact.label }}</div>
                 <div class="cs-meta-value">{{ fact.value }}</div>
             </div>
@@ -49,7 +49,15 @@
                     <div class="cs-eyebrow">Overview</div>
                     <h2 class="cs-h2">The Problem</h2>
                     <p class="cs-body">{{ project.description }}</p>
-                    <p class="cs-body cs-placeholder">[Placeholder — summarize your role, the team, and the scope of what you owned end to end.]</p>
+                    <ul v-if="project.highlights.length" class="cs-highlights">
+                        <li v-for="highlight in project.highlights" :key="highlight">
+                            <svg class="cs-highlight-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3">
+                                <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                            <span>{{ highlight }}</span>
+                        </li>
+                    </ul>
+                    <p v-else class="cs-body cs-placeholder">[Placeholder — summarize your role, the team, and the scope of what you owned end to end.]</p>
                 </div>
                 <div class="cs-overview-media">
                     <img :src="project.image" :alt="`${project.title} overview`" loading="lazy" />
@@ -122,37 +130,49 @@
 
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
+import { computed } from 'vue';
 import SiteFooter from '@/components/layout/SiteFooter.vue';
 import SiteNav from '@/components/layout/SiteNav.vue';
 import SiteVideoBackground from '@/components/layout/SiteVideoBackground.vue';
+import { useAdminPreviewOverrides, useAdminPreviewScrollTarget } from '@/composables/useAdminPreview';
 import { profile, projects, projectSlug } from '@/data/portfolio';
+import type { Project } from '@/types/portfolio';
 
 const props = defineProps<{ slug: string }>();
 
-const project = projects.find((p) => projectSlug(p.title) === props.slug) ?? projects[0];
-const slug = projectSlug(project.title);
+const baseProject = projects.find((p) => projectSlug(p.title) === props.slug) ?? projects[0];
+const overrides = useAdminPreviewOverrides<{ project: Project }>('project');
+useAdminPreviewScrollTarget();
 
-const metaFacts = [
-    { label: 'Role', value: `${project.genre} Engineer` },
-    { label: 'Engine', value: project.engine },
-    { label: 'Genre', value: project.genre },
-    { label: 'Status', value: project.status },
-];
+const project = computed(() => overrides.project ?? baseProject);
+const slug = computed(() => projectSlug(project.value.title));
+const role = computed(() => project.value.role || `${project.value.genre} Engineer`);
 
-const processSteps = [
+const metaStats = computed(() => [
+    { label: 'Role', value: role.value },
+    { label: 'Engine', value: project.value.engine },
+    { label: 'Genre', value: project.value.genre },
+    { label: 'Status', value: project.value.status },
+]);
+
+const fallbackProcessSteps = [
     { title: 'Discover', description: '[Placeholder — research, constraints, and goals that shaped the direction.]' },
     { title: 'Design', description: '[Placeholder — how you explored the system architecture and gameplay feel.]' },
     { title: 'Build', description: '[Placeholder — implementation details, tools, and technical challenges solved.]' },
     { title: 'Iterate', description: '[Placeholder — playtesting, tuning, and refinement based on feedback.]' },
 ];
 
-const galleryImages = (project.media ?? []).filter((item) => item.type === 'image').slice(1);
+const processSteps = computed(() => (project.value.processSteps?.length ? project.value.processSteps : fallbackProcessSteps));
 
-const outcomes = [
+const galleryImages = computed(() => (project.value.media ?? []).filter((item) => item.type === 'image').slice(1));
+
+const fallbackOutcomes = [
     { value: '00%', label: 'Placeholder Metric' },
     { value: '00ms', label: 'Placeholder Metric' },
     { value: '00+', label: 'Placeholder Metric' },
 ];
+
+const outcomes = computed(() => (project.value.outcomes?.length ? project.value.outcomes : fallbackOutcomes));
 </script>
 
 <style lang="scss" scoped>
@@ -310,15 +330,41 @@ const outcomes = [
     @media (max-width: 700px) {
         grid-template-columns: repeat(2, 1fr);
     }
+
+    @media (max-width: 420px) {
+        grid-template-columns: 1fr;
+    }
 }
 
 .cs-meta-item {
+    min-width: 0;
     padding: 30px 40px;
     border-right: 1px solid var(--cs-border-light);
     text-align: center;
 
     &:last-child {
         border-right: none;
+    }
+
+    @media (max-width: 700px) {
+        padding: 24px 16px;
+        border-bottom: 1px solid var(--cs-border-light);
+
+        &:nth-last-child(-n + 2) {
+            border-bottom: none;
+        }
+    }
+
+    @media (max-width: 420px) {
+        border-right: none;
+
+        &:nth-last-child(-n + 2) {
+            border-bottom: 1px solid var(--cs-border-light);
+        }
+
+        &:last-child {
+            border-bottom: none;
+        }
     }
 }
 
@@ -336,6 +382,7 @@ const outcomes = [
     color: var(--cs-ink);
     margin-top: 8px;
     text-transform: uppercase;
+    overflow-wrap: break-word;
 }
 
 /* ── overview ───────────────────────────────────────────────────────── */
@@ -382,6 +429,33 @@ const outcomes = [
     margin-top: 18px;
     font-style: italic;
     opacity: 0.75;
+}
+
+.cs-highlights {
+    margin: 18px 0 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    li {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        font-size: 15px;
+        line-height: 1.5;
+        color: var(--cs-body);
+    }
+}
+
+.cs-highlight-icon {
+    flex: 0 0 auto;
+    margin-top: 3px;
+    padding: 3px;
+    border-radius: 50%;
+    background: rgba(226, 115, 58, 0.14);
+    color: var(--cs-accent);
 }
 
 .cs-overview-media {

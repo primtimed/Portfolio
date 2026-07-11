@@ -66,15 +66,22 @@
 
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
+import { computed } from 'vue';
 import SiteFooter from '@/components/layout/SiteFooter.vue';
 import SiteNav from '@/components/layout/SiteNav.vue';
+import { useAdminPreviewOverrides, useAdminPreviewScrollTarget } from '@/composables/useAdminPreview';
 import { hobbies } from '@/data/hobbies';
 import { profile } from '@/data/portfolio';
+import type { Hobby } from '@/types/hobby';
 
 const props = defineProps<{ slug: string }>();
 
-const hobby = hobbies.find((h) => h.slug === props.slug) ?? hobbies[0];
-const overviewImage = hobby.gallery[0]?.image;
+const baseHobby = hobbies.find((h) => h.slug === props.slug) ?? hobbies[0];
+const overrides = useAdminPreviewOverrides<{ hobby: Hobby }>('hobby');
+useAdminPreviewScrollTarget();
+
+const hobby = computed(() => overrides.hobby ?? baseHobby);
+const overviewImage = computed(() => hobby.value.gallery[0]?.image);
 </script>
 
 <style lang="scss" scoped>

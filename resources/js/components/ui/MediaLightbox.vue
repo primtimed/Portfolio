@@ -40,7 +40,8 @@
                                 >
                                     <img v-if="item.type === 'image'" :src="item.src" :alt="item.caption || ''" loading="lazy" />
                                     <template v-else>
-                                        <video :src="item.src" muted playsinline />
+                                        <img v-if="getYoutubeThumbnailUrl(item.src)" :src="getYoutubeThumbnailUrl(item.src)!" :alt="item.caption || ''" loading="lazy" />
+                                        <video v-else :src="item.src" muted playsinline />
                                         <span class="lb-grid-play">
                                             <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor">
                                                 <path d="M8 5v14l11-7L8 5Z" />
@@ -94,6 +95,16 @@
                                     :alt="current.caption || ''"
                                     class="lb-media"
                                 />
+                                <iframe
+                                    v-else-if="current?.type === 'video' && getYoutubeEmbedUrl(current.src, { autoplay: true, controls: true })"
+                                    :key="current.src"
+                                    :src="getYoutubeEmbedUrl(current.src, { autoplay: true, controls: true })!"
+                                    class="lb-media lb-media-iframe"
+                                    frameborder="0"
+                                    allow="autoplay; encrypted-media"
+                                    allowfullscreen
+                                    title=""
+                                />
                                 <video
                                     v-else-if="current?.type === 'video'"
                                     :key="current.src"
@@ -145,6 +156,7 @@
 
 <script setup lang="ts">
 import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
+import { getYoutubeEmbedUrl, getYoutubeThumbnailUrl } from '@/lib/youtube';
 import type { ProjectMediaItem } from '@/types/portfolio';
 
 const PAGE_SIZE = 4;
@@ -522,6 +534,11 @@ onUnmounted(() => {
     object-fit: contain;
 }
 
+.lb-media-iframe {
+    aspect-ratio: 16 / 9;
+    max-width: 88vw;
+}
+
 .lb-footer {
     flex: 0 0 auto;
     display: flex;
@@ -618,6 +635,7 @@ onUnmounted(() => {
 
     .lb-panel {
         gap: 14px;
+        padding: 28px 20px;
     }
 
     .lb-grid-row {
@@ -633,6 +651,27 @@ onUnmounted(() => {
     .lb-page-next {
         width: 32px;
         height: 32px;
+    }
+}
+
+@media (max-width: 400px) {
+    .lb-panel {
+        padding: 20px 14px;
+    }
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+    .lb-frame {
+        max-width: 92vw;
+        max-height: 85vh;
+        padding: 12px;
+    }
+
+    .lb-media {
+        height: auto;
+        width: auto;
+        max-height: 85vh;
+        max-width: 88vw;
     }
 }
 </style>

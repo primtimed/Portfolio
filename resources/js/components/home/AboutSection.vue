@@ -147,15 +147,22 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import RevealOnView from '@/components/ui/RevealOnView.vue';
-import { aboutStats, profile } from '@/data/portfolio';
+import { aboutStats as baseStats, profile as baseProfile } from '@/data/portfolio';
+import type { AboutStat } from '@/types/portfolio';
 
-const stats = aboutStats;
+const props = defineProps<{
+    profile?: typeof baseProfile;
+    stats?: AboutStat[];
+}>();
+
+const profile = computed(() => props.profile ?? baseProfile);
+const stats = computed(() => props.stats ?? baseStats);
 
 const firstName = computed(
-    () => profile.name.split(' ')[0]?.toLowerCase() ?? '',
+    () => profile.value.name.split(' ')[0]?.toLowerCase() ?? '',
 );
 const lastName = computed(() =>
-    profile.name.split(' ').slice(1).join(' ').toLowerCase(),
+    profile.value.name.split(' ').slice(1).join(' ').toLowerCase(),
 );
 
 function renderBold(text: string) {
@@ -185,7 +192,7 @@ function renderBold(text: string) {
     flex: 1 1 auto;
     width: 100%;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(200px, 750px);
+    grid-template-columns: minmax(0, 1fr) minmax(200px, clamp(320px, 42vw, 750px));
     align-items: stretch;
 
     @media (max-width: 960px) {
@@ -203,7 +210,7 @@ function renderBold(text: string) {
     margin: 0 auto;
     padding: 0 56px;
 
-    @media (max-width: 760px) {
+    @media (max-width: 960px) {
         flex-direction: column;
         padding: 48px 24px;
     }
@@ -217,9 +224,10 @@ function renderBold(text: string) {
     padding-right: 40px;
     border-right: 1px solid var(--border);
 
-    @media (max-width: 760px) {
+    @media (max-width: 960px) {
         flex-direction: row;
         flex-wrap: wrap;
+        justify-content: center;
         padding-right: 0;
         padding-bottom: 24px;
         border-right: none;

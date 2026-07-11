@@ -101,14 +101,14 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 import RevealOnView from '@/components/ui/RevealOnView.vue';
-import { featuredGamesItchUrl } from '@/data/portfolio';
+import { featuredGamesItchUrl as baseItchUrl } from '@/data/portfolio';
 import type { FeaturedGame } from '@/types/portfolio';
 
-defineProps<{ games: FeaturedGame[] }>();
+const props = defineProps<{ games: FeaturedGame[]; itchUrl?: string }>();
 
-const moreUrl = featuredGamesItchUrl;
+const moreUrl = computed(() => props.itchUrl ?? baseItchUrl);
 
 const trackEl = ref<HTMLElement | null>(null);
 const atStart = ref(true);

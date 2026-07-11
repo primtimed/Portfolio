@@ -13,3 +13,5 @@ Route::get('/project/{project}', fn (string $project)
 Route::get('/hobbies/{hobby}', fn (string $hobby)
     => Inertia::render('hobbies/Hobby', ['slug' => $hobby]))
     ->name('hobbies.show');
+
+require __DIR__.'/admin.php';
