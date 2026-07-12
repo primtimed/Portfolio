@@ -54,6 +54,21 @@
                     </section>
 
                     <section class="rs-section">
+                        <h2 class="rs-heading">Experience</h2>
+                        <div v-if="jobs.length === 0" class="rs-edu-placeholder">Add your work experience here</div>
+                        <div v-else class="rs-proj-list rs-jobs-list">
+                            <div v-for="item in recentJobs" :key="item.title" class="rs-proj-item">
+                                <div class="rs-proj-row">
+                                    <h3 class="rs-proj-title">{{ item.title }}</h3>
+                                    <span class="rs-proj-meta">{{ item.meta }}</span>
+                                </div>
+                                <p v-if="item.company" class="rs-proj-tags">{{ item.company }}</p>
+                                <p class="rs-proj-desc">{{ item.description }}</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="rs-section">
                         <h2 class="rs-heading">Projects</h2>
                         <div class="rs-proj-list">
                             <div v-for="item in experience" :key="item.title" class="rs-proj-item">
@@ -129,19 +144,22 @@ import {
     education as baseEducation,
     experience as baseExperience,
     focusTags as baseFocusTags,
+    jobs as baseJobs,
     profile as baseProfile,
     skillCategories as baseSkillCategories,
 } from '@/data/portfolio';
 import { recordResumeDownload } from '@/lib/analytics';
 import type { PortfolioMeta } from '@/types/admin';
 
-const overrides = useAdminPreviewOverrides<Pick<PortfolioMeta, 'profile' | 'experience' | 'focusTags' | 'skillCategories' | 'education'>>('portfolio-meta');
+const overrides = useAdminPreviewOverrides<Pick<PortfolioMeta, 'profile' | 'experience' | 'focusTags' | 'skillCategories' | 'education' | 'jobs'>>('portfolio-meta');
 useAdminPreviewScrollTarget();
 
 const profile = computed(() => overrides.profile ?? baseProfile);
 const experience = computed(() => overrides.experience ?? baseExperience);
 const focusTags = computed(() => overrides.focusTags ?? baseFocusTags);
 const skillCategories = computed(() => overrides.skillCategories ?? baseSkillCategories);
+const jobs = computed(() => overrides.jobs ?? baseJobs);
+const recentJobs = computed(() => jobs.value.slice(0, 3));
 const education = computed(() => overrides.education ?? baseEducation);
 
 const firstName = computed(() => profile.value.name.split(' ')[0]);

@@ -90,6 +90,41 @@
                             </AdminField>
                         </AdminSection>
 
+                        <AdminSection title="Jobs (Experience section)" preview-target=".rs-jobs-list">
+                            <AdminRepeaterCard
+                                :model-value="form.jobs"
+                                label="job"
+                                @add="
+                                    form.jobs.push({
+                                        title: '',
+                                        company: '',
+                                        meta: '',
+                                        description: '',
+                                    })
+                                "
+                                @remove="(i) => form.jobs.splice(i, 1)"
+                            >
+                                <template #default="{ item }">
+                                    <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                                        <AdminField label="Title"
+                                            ><AdminInput v-model="item.title"
+                                        /></AdminField>
+                                        <AdminField label="Meta"
+                                            ><AdminInput v-model="item.meta"
+                                        /></AdminField>
+                                    </div>
+                                    <AdminField label="Company"
+                                        ><AdminInput v-model="item.company"
+                                    /></AdminField>
+                                    <AdminField label="Description"
+                                        ><AdminTextarea
+                                            v-model="item.description"
+                                            :rows="2"
+                                    /></AdminField>
+                                </template>
+                            </AdminRepeaterCard>
+                        </AdminSection>
+
                         <AdminSection title="Experience (Projects section)" preview-target=".rs-proj-list">
                             <AdminRepeaterCard
                                 :model-value="form.experience"
@@ -345,6 +380,7 @@ useAdminPreviewPublisher('portfolio-meta', previewFrame, () => ({
     portfolioCta: form.portfolioCta,
     experience: form.experience,
     education: form.education,
+    jobs: form.jobs,
 }));
 
 useAdminPreviewScrollSync(previewFrame);

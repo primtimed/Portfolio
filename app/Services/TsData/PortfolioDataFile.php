@@ -19,6 +19,7 @@ class PortfolioDataFile extends TsDataFile
         'portfolioCta' => null,
         'experience' => 'ExperienceItem[]',
         'education' => 'EducationItem[]',
+        'jobs' => 'JobItem[]',
     ];
 
     protected function path(): string
@@ -29,7 +30,7 @@ class PortfolioDataFile extends TsDataFile
     protected function header(): string
     {
         return <<<'TS'
-        import type { AboutStat, EducationItem, ExperienceItem, FeaturedGame, FeaturedProject, SkillCategory } from '@/types/portfolio';
+        import type { AboutStat, EducationItem, ExperienceItem, FeaturedGame, FeaturedProject, JobItem, SkillCategory } from '@/types/portfolio';
         TS;
     }
 
@@ -55,7 +56,7 @@ class PortfolioDataFile extends TsDataFile
     }
 
     /**
-     * Older portfolio.ts files predate the "education" export, and write()
+     * Older portfolio.ts files predate the "education"/"jobs" exports, and write()
      * requires every declared export to be present. Backfill any missing keys
      * so both old and new files round-trip safely.
      *
@@ -63,6 +64,6 @@ class PortfolioDataFile extends TsDataFile
      */
     private function readWithDefaults(): array
     {
-        return ['education' => [], ...$this->read()];
+        return ['education' => [], 'jobs' => [], ...$this->read()];
     }
 }

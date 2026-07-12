@@ -18,6 +18,13 @@ export interface EducationItem {
     description: string;
 }
 
+export interface JobItem {
+    title: string;
+    company: string;
+    meta: string;
+    description: string;
+}
+
 export interface FeaturedGame {
     title: string;
     tagline: string;

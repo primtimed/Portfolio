@@ -97,6 +97,12 @@ class PortfolioMetaRequest extends FormRequest
             'education.*.institution' => ['nullable', 'string'],
             'education.*.meta' => ['nullable', 'string'],
             'education.*.description' => ['nullable', 'string'],
+
+            'jobs' => ['present', 'array'],
+            'jobs.*.title' => ['nullable', 'string'],
+            'jobs.*.company' => ['nullable', 'string'],
+            'jobs.*.meta' => ['nullable', 'string'],
+            'jobs.*.description' => ['nullable', 'string'],
         ];
     }
 }

@@ -4,6 +4,7 @@ import type {
     ExperienceItem,
     FeaturedGame,
     FeaturedProject,
+    JobItem,
     SkillCategory,
 } from '@/types/portfolio';
 
@@ -44,4 +45,5 @@ export interface PortfolioMeta {
     portfolioCta: PortfolioCta;
     experience: ExperienceItem[];
     education: EducationItem[];
+    jobs: JobItem[];
 }
