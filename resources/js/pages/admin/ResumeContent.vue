@@ -323,7 +323,7 @@ import AdminStringList from '@/components/admin/AdminStringList.vue';
 import AdminTextarea from '@/components/admin/AdminTextarea.vue';
 import { useAdminPreviewPublisher, useAdminPreviewScrollSync } from '@/composables/useAdminPreview';
 import AdminLayout from '@/layouts/AdminLayout.vue';
-import { update } from '@/routes/admin/portfolio-meta';
+import { update as updateResume } from '@/routes/admin/resume-content';
 import type { PortfolioMeta } from '@/types/admin';
 
 type PortfolioMetaFormData = Omit<PortfolioMeta, 'experience'> & {
@@ -334,10 +334,11 @@ type PortfolioMetaFormData = Omit<PortfolioMeta, 'experience'> & {
 
 const props = defineProps<{ meta: PortfolioMeta }>();
 
-// The save endpoint is shared with the Site content page, so the full meta
-// object round-trips here too — otherwise saving from this page would wipe
-// every field this form doesn't render (featured games, portfolio CTA, etc).
-const form = useForm(update(), {
+// updateMeta() merges by key, but validated() only returns fields this form
+// actually sends — so the full meta object round-trips here too, otherwise
+// saving from this page would wipe every field this form doesn't render
+// (featured games, portfolio CTA, etc).
+const form = useForm(updateResume(), {
     ...props.meta,
     experience: props.meta.experience.map((item) => ({
         ...item,

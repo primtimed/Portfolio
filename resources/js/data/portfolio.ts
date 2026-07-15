@@ -258,11 +258,20 @@ export const experience: ExperienceItem[] = [
     {
         "title": "Multiplayer Survival Game",
         "meta": null,
-        "description": "- Developed player movement, inventory, crafting, and interaction systems.\n- Implemented multiplayer synchronization using Unity Netcode.\n- Optimized gameplay systems to improve performance and stability.",
+        "description": "- Developed player **movement, inventory, crafting**, and **interaction systems**.\n- Implemented **multiplayer** synchronization using **Unity Netcode**.\n- Optimized gameplay systems to improve **performance** and **stability**.",
         "tags": [
             "Unity",
             "C#",
             "Netcode for GameObjects"
+        ]
+    },
+    {
+        "title": "Personal Home-lab",
+        "meta": null,
+        "description": "- Built and managed a self-hosted homelab using Proxmox, Docker, and Linux\n- Building with local **OLama** ai models to create a local home assistent.",
+        "tags": [
+            "Laravel",
+            "Local Networking"
         ]
     }
 ];

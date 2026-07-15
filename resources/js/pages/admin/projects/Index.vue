@@ -26,6 +26,26 @@
                     </div>
                 </div>
                 <div class="flex flex-wrap shrink-0 items-center gap-2">
+                    <div class="flex items-center gap-1">
+                        <button
+                            type="button"
+                            class="rounded-lg border border-(--border-strong) px-2 py-2 text-xs font-bold text-(--text-dim) uppercase hover:border-(--accent) hover:text-(--accent) disabled:pointer-events-none disabled:opacity-30"
+                            :disabled="index === 0"
+                            aria-label="Move up"
+                            @click="move(index, index - 1)"
+                        >
+                            ↑
+                        </button>
+                        <button
+                            type="button"
+                            class="rounded-lg border border-(--border-strong) px-2 py-2 text-xs font-bold text-(--text-dim) uppercase hover:border-(--accent) hover:text-(--accent) disabled:pointer-events-none disabled:opacity-30"
+                            :disabled="index === projects.length - 1"
+                            aria-label="Move down"
+                            @click="move(index, index + 1)"
+                        >
+                            ↓
+                        </button>
+                    </div>
                     <a
                         :href="`/project/${projectSlug(project.title)}`"
                         target="_blank"
@@ -56,10 +76,10 @@ import { Head, router } from '@inertiajs/vue3';
 import AdminButton from '@/components/admin/AdminButton.vue';
 import { projectSlug } from '@/data/projects';
 import AdminLayout from '@/layouts/AdminLayout.vue';
-import { create, destroy as destroyRoute, edit } from '@/routes/admin/projects';
+import { create, destroy as destroyRoute, edit, reorder } from '@/routes/admin/projects';
 import type { Project } from '@/types/portfolio';
 
-defineProps<{ projects: Project[] }>();
+const props = defineProps<{ projects: Project[] }>();
 
 function destroy(index: number, title: string) {
     if (!confirm(`Delete "${title}"? This can't be undone.`)) {
@@ -67,5 +87,16 @@ function destroy(index: number, title: string) {
     }
 
     router.delete(destroyRoute(index).url);
+}
+
+function move(from: number, to: number) {
+    if (to < 0 || to >= props.projects.length) {
+        return;
+    }
+
+    const order = props.projects.map((_, i) => i);
+    order.splice(to, 0, order.splice(from, 1)[0]);
+
+    router.post(reorder().url, { order }, { preserveScroll: true });
 }
 </script>

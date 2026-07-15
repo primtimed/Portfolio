@@ -4,6 +4,7 @@ namespace App\Http\Requests\Admin;
 
 use App\Services\TsData\HobbiesDataFile;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class HobbyRequest extends FormRequest
 {
@@ -25,6 +26,7 @@ class HobbyRequest extends FormRequest
             'stats.*.label' => ['nullable', 'string'],
             'stats.*.value' => ['nullable', 'string'],
             'gallery' => ['present', 'array'],
+            'gallery.*.type' => ['nullable', Rule::in(['image', 'video'])],
             'gallery.*.image' => ['nullable', 'string'],
             'gallery.*.caption' => ['nullable', 'string'],
         ];

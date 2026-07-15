@@ -25,11 +25,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('content', [AdminPortfolioMetaController::class, 'update'])->name('portfolio-meta.update');
 
         Route::get('resume', [AdminPortfolioMetaController::class, 'editResume'])->name('resume-content.edit');
+        Route::put('resume', [AdminPortfolioMetaController::class, 'updateResume'])->name('resume-content.update');
 
+        Route::post('projects/reorder', [AdminProjectController::class, 'reorder'])->name('projects.reorder');
         Route::resource('projects', AdminProjectController::class)
             ->except(['show'])
             ->parameters(['projects' => 'project']);
 
+        Route::post('hobbies/reorder', [AdminHobbyController::class, 'reorder'])->name('hobbies.reorder');
         Route::resource('hobbies', AdminHobbyController::class)
             ->except(['show'])
             ->parameters(['hobbies' => 'hobby']);

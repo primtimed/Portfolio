@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\HobbyRequest;
 use App\Services\TsData\HobbiesDataFile;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -51,5 +52,17 @@ class AdminHobbyController extends Controller
         $hobbies->deleteHobby($hobby);
 
         return redirect()->route('admin.hobbies.index')->with('status', 'Hobby deleted.');
+    }
+
+    public function reorder(Request $request, HobbiesDataFile $hobbies): RedirectResponse
+    {
+        $order = $request->validate([
+            'order' => ['required', 'array'],
+            'order.*' => ['string'],
+        ])['order'];
+
+        $hobbies->reorder($order);
+
+        return redirect()->route('admin.hobbies.index')->with('status', 'Hobby order saved.');
     }
 }

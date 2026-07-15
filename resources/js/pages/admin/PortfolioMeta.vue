@@ -109,11 +109,12 @@
                 <AdminField label="About paragraphs">
                     <AdminStringList v-model="form.profile.aboutParagraphs" />
                 </AdminField>
-                <AdminField label="Photo URL"
-                    ><AdminInput
-                        v-model="form.profile.photoUrl"
-                        placeholder="Leave blank to show the placeholder icon"
-                /></AdminField>
+                <AdminField
+                    label="Photo"
+                    hint="Image URL, video file (.mp4), or a YouTube link. Leave blank to show the placeholder icon."
+                >
+                    <AdminInput v-model="form.profile.photoUrl" />
+                </AdminField>
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <AdminField label="About CTA prompt"
                         ><AdminInput v-model="form.profile.aboutCtaPrompt"

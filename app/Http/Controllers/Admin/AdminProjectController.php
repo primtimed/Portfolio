@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ProjectRequest;
 use App\Services\TsData\ProjectsDataFile;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -70,5 +71,17 @@ class AdminProjectController extends Controller
         $projects->deleteProject($project);
 
         return redirect()->route('admin.projects.index')->with('status', 'Project deleted.');
+    }
+
+    public function reorder(Request $request, ProjectsDataFile $projects): RedirectResponse
+    {
+        $order = $request->validate([
+            'order' => ['required', 'array'],
+            'order.*' => ['integer'],
+        ])['order'];
+
+        $projects->reorder($order);
+
+        return redirect()->route('admin.projects.index')->with('status', 'Project order saved.');
     }
 }

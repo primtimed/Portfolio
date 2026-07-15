@@ -1,4 +1,5 @@
 export interface HobbyGalleryItem {
+    type?: 'image' | 'video';
     image: string;
     caption: string;
 }

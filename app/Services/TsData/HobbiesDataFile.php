@@ -90,4 +90,24 @@ class HobbiesDataFile extends TsDataFile
 
         throw new NotFoundHttpException('Hobby not found.');
     }
+
+    /**
+     * @param  array<int, string>  $order  hobby slugs, in their new order
+     */
+    public function reorder(array $order): void
+    {
+        $data = $this->read();
+
+        $bySlug = [];
+        foreach ($data['hobbies'] as $hobby) {
+            $bySlug[$hobby['slug']] = $hobby;
+        }
+
+        if (array_diff(array_keys($bySlug), $order) !== [] || array_diff($order, array_keys($bySlug)) !== []) {
+            throw new NotFoundHttpException('Hobby order does not match existing hobbies.');
+        }
+
+        $data['hobbies'] = array_map(fn (string $slug) => $bySlug[$slug], $order);
+        $this->write($data);
+    }
 }

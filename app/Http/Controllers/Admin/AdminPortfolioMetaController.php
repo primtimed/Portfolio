@@ -31,6 +31,13 @@ class AdminPortfolioMetaController extends Controller
     {
         $portfolio->updateMeta($request->validated());
 
-        return redirect()->back()->with('status', 'Portfolio content saved.');
+        return redirect()->route('admin.portfolio-meta.edit')->with('status', 'Portfolio content saved.');
+    }
+
+    public function updateResume(PortfolioMetaRequest $request, PortfolioDataFile $portfolio): RedirectResponse
+    {
+        $portfolio->updateMeta($request->validated());
+
+        return redirect()->route('admin.resume-content.edit')->with('status', 'Resume content saved.');
     }
 }

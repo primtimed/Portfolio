@@ -32,6 +32,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
+import { isImageUrl } from '@/lib/media';
 import { getYoutubeEmbedUrl } from '@/lib/youtube';
 
 const props = defineProps<{ src: string }>();
@@ -42,13 +43,7 @@ const embedUrl = computed(() =>
     getYoutubeEmbedUrl(props.src, { autoplay: true, mute: true, loop: true, controls: false }),
 );
 
-const IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.avif', '.svg'];
-
-const isImage = computed(() => {
-    const path = props.src?.split(/[?#]/)[0].toLowerCase() ?? '';
-
-    return IMAGE_EXTENSIONS.some((ext) => path.endsWith(ext));
-});
+const isImage = computed(() => isImageUrl(props.src));
 
 onMounted(() => {
     reducedMotion.value = window.matchMedia(

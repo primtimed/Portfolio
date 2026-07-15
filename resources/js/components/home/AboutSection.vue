@@ -111,8 +111,25 @@
             </div>
 
             <div class="about-media">
+                <iframe
+                    v-if="photoEmbedUrl"
+                    class="about-media-photo about-media-iframe"
+                    :src="photoEmbedUrl"
+                    frameborder="0"
+                    allow="autoplay; encrypted-media"
+                    title=""
+                ></iframe>
+                <video
+                    v-else-if="isPhotoVideo"
+                    class="about-media-photo"
+                    autoplay
+                    muted
+                    loop
+                    playsinline
+                    :src="profile.photoUrl"
+                ></video>
                 <img
-                    v-if="profile.photoUrl"
+                    v-else-if="profile.photoUrl"
                     :src="profile.photoUrl"
                     :alt="profile.name"
                     class="about-media-photo"
@@ -156,6 +173,8 @@
 import { computed } from 'vue';
 import RevealOnView from '@/components/ui/RevealOnView.vue';
 import { aboutStats as baseStats, profile as baseProfile } from '@/data/portfolio';
+import { isVideoFileUrl } from '@/lib/media';
+import { getYoutubeEmbedUrl } from '@/lib/youtube';
 import type { AboutStat } from '@/types/portfolio';
 
 const props = defineProps<{
@@ -165,6 +184,11 @@ const props = defineProps<{
 
 const profile = computed(() => props.profile ?? baseProfile);
 const stats = computed(() => props.stats ?? baseStats);
+
+const photoEmbedUrl = computed(() =>
+    getYoutubeEmbedUrl(profile.value.photoUrl, { autoplay: true, mute: true, loop: true, controls: false }),
+);
+const isPhotoVideo = computed(() => isVideoFileUrl(profile.value.photoUrl));
 
 const firstName = computed(
     () => profile.value.name.split(' ')[0]?.toLowerCase() ?? '',
@@ -396,6 +420,16 @@ function renderBold(text: string) {
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+.about-media-iframe {
+    top: 50%;
+    left: 50%;
+    inset: auto;
+    width: 300%;
+    height: 300%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
 }
 
 .about-media-caption {

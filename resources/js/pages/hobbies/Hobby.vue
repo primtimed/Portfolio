@@ -8,7 +8,26 @@
         <SiteNav :name="profile.name" />
 
         <!-- HERO -->
-        <header class="cs-hero" :style="{ backgroundImage: `url(${hobby.heroImage})` }">
+        <header class="cs-hero">
+            <div class="cs-hero-media">
+                <iframe
+                    v-if="heroEmbedUrl"
+                    class="cs-hero-media-iframe"
+                    :src="heroEmbedUrl"
+                    frameborder="0"
+                    allow="autoplay; encrypted-media"
+                    title=""
+                ></iframe>
+                <video
+                    v-else-if="isHeroVideo"
+                    autoplay
+                    muted
+                    loop
+                    playsinline
+                    :src="hobby.heroImage"
+                ></video>
+                <img v-else :src="hobby.heroImage" alt="" />
+            </div>
             <div class="cs-hero-scrim" />
             <div class="cs-hero-inner">
                 <a href="/#top" class="cs-back-link">&larr; Back home</a>
@@ -32,10 +51,18 @@
                 <div>
                     <div class="cs-eyebrow">About</div>
                     <h2 class="cs-h2">The Story</h2>
-                    <p v-for="(para, i) in hobby.description" :key="i" class="cs-body">{{ para }}</p>
+                    <p v-for="(para, i) in hobby.description" :key="i" class="cs-body" v-html="renderBold(para)" />
                 </div>
-                <div v-if="overviewImage" class="cs-overview-media">
-                    <img :src="overviewImage" :alt="`${hobby.title} overview`" loading="lazy" />
+                <div v-if="overviewMedia" class="cs-overview-media">
+                    <video
+                        v-if="overviewMedia.type === 'video'"
+                        autoplay
+                        muted
+                        loop
+                        playsinline
+                        :src="overviewMedia.image"
+                    ></video>
+                    <img v-else :src="overviewMedia.image" :alt="`${hobby.title} overview`" loading="lazy" />
                 </div>
             </div>
         </section>
@@ -49,12 +76,14 @@
                 </div>
                 <div class="cs-gallery-row cs-gallery-row-2">
                     <div v-for="item in hobby.gallery.slice(0, 2)" :key="item.image" class="cs-gallery-tile cs-gallery-tile-wide">
-                        <img :src="item.image" :alt="item.caption" loading="lazy" />
+                        <video v-if="item.type === 'video'" :src="item.image" muted loop autoplay playsinline />
+                        <img v-else :src="item.image" :alt="item.caption" loading="lazy" />
                     </div>
                 </div>
                 <div v-if="hobby.gallery.length > 2" class="cs-gallery-row cs-gallery-row-3">
                     <div v-for="item in hobby.gallery.slice(2, 5)" :key="item.image" class="cs-gallery-tile">
-                        <img :src="item.image" :alt="item.caption" loading="lazy" />
+                        <video v-if="item.type === 'video'" :src="item.image" muted loop autoplay playsinline />
+                        <img v-else :src="item.image" :alt="item.caption" loading="lazy" />
                     </div>
                 </div>
             </div>
@@ -72,6 +101,9 @@ import SiteNav from '@/components/layout/SiteNav.vue';
 import { useAdminPreviewOverrides, useAdminPreviewScrollTarget } from '@/composables/useAdminPreview';
 import { hobbies } from '@/data/hobbies';
 import { profile } from '@/data/portfolio';
+import { isVideoFileUrl } from '@/lib/media';
+import { renderBold } from '@/lib/richText';
+import { getYoutubeEmbedUrl } from '@/lib/youtube';
 import type { Hobby } from '@/types/hobby';
 
 const props = defineProps<{ slug: string }>();
@@ -91,7 +123,12 @@ const overrides = useAdminPreviewOverrides<{ hobby: Hobby }>('hobby');
 useAdminPreviewScrollTarget();
 
 const hobby = computed(() => overrides.hobby ?? baseHobby);
-const overviewImage = computed(() => hobby.value.gallery[0]?.image);
+const overviewMedia = computed(() => hobby.value.gallery[0]);
+
+const heroEmbedUrl = computed(() =>
+    getYoutubeEmbedUrl(hobby.value.heroImage, { autoplay: true, mute: true, loop: true, controls: false }),
+);
+const isHeroVideo = computed(() => isVideoFileUrl(hobby.value.heroImage));
 </script>
 
 <style lang="scss" scoped>
@@ -119,14 +156,39 @@ const overviewImage = computed(() => hobby.value.gallery[0]?.image);
 /* ── hero ───────────────────────────────────────────────────────────── */
 .cs-hero {
     position: relative;
-    background-size: cover;
-    background-position: center;
     padding: 172px 64px 90px;
     overflow: hidden;
 
     @media (max-width: 760px) {
         padding: 140px 24px 60px;
     }
+}
+
+.cs-hero-media {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+
+    img,
+    video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+}
+
+.cs-hero-media-iframe {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100vw;
+    height: 56.25vw; /* 16:9 */
+    min-height: 100%;
+    min-width: 177.78vh; /* 16:9 */
+    transform: translate(-50%, -50%);
+    pointer-events: none;
 }
 
 .cs-hero-scrim {
@@ -269,7 +331,8 @@ const overviewImage = computed(() => hobby.value.gallery[0]?.image);
     overflow: hidden;
     box-shadow: 0 20px 50px rgba(28, 26, 23, 0.12);
 
-    img {
+    img,
+    video {
         width: 100%;
         height: 100%;
         object-fit: cover;
@@ -331,7 +394,8 @@ const overviewImage = computed(() => hobby.value.gallery[0]?.image);
     overflow: hidden;
     box-shadow: 0 20px 50px rgba(28, 26, 23, 0.1);
 
-    img {
+    img,
+    video {
         width: 100%;
         height: 100%;
         object-fit: cover;

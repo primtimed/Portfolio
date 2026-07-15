@@ -83,4 +83,19 @@ class ProjectsDataFile extends TsDataFile
         array_splice($data['projects'], $index, 1);
         $this->write($data);
     }
+
+    /**
+     * @param  array<int, int>  $order  the current indices, in their new order
+     */
+    public function reorder(array $order): void
+    {
+        $data = $this->read();
+
+        if (array_diff(array_keys($data['projects']), $order) !== [] || array_diff($order, array_keys($data['projects'])) !== []) {
+            throw new NotFoundHttpException('Project order does not match existing projects.');
+        }
+
+        $data['projects'] = array_map(fn (int $i) => $data['projects'][$i], $order);
+        $this->write($data);
+    }
 }

@@ -78,9 +78,13 @@
                             <AdminField label="Tagline" :error="form.errors.tagline"
                                 ><AdminInput v-model="form.tagline"
                             /></AdminField>
-                            <AdminField label="Hero image URL" :error="form.errors.heroImage"
-                                ><AdminInput v-model="form.heroImage"
-                            /></AdminField>
+                            <AdminField
+                                label="Hero background"
+                                :error="form.errors.heroImage"
+                                hint="Image URL, video file (.mp4), or a YouTube link."
+                            >
+                                <AdminInput v-model="form.heroImage" />
+                            </AdminField>
                         </AdminSection>
 
                         <AdminSection title="Stats (meta strip)" preview-target=".cs-meta-strip">
@@ -107,6 +111,7 @@
                             <AdminField
                                 label="Description paragraphs"
                                 :error="form.errors.description"
+                                hint="Wrap text in **double asterisks** to make it bold."
                             >
                                 <AdminStringList v-model="form.description" />
                             </AdminField>
@@ -115,14 +120,21 @@
                         <AdminSection title="Gallery" preview-target=".cs-gallery">
                             <AdminRepeaterCard
                                 :model-value="form.gallery"
-                                label="gallery image"
-                                @add="form.gallery.push({ image: '', caption: '' })"
+                                label="gallery item"
+                                @add="form.gallery.push({ type: 'image', image: '', caption: '' })"
                                 @remove="(i) => form.gallery.splice(i, 1)"
                             >
                                 <template #default="{ item }">
-                                    <AdminField label="Image URL"
-                                        ><AdminInput v-model="item.image"
-                                    /></AdminField>
+                                    <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
+                                        <AdminField label="Type"
+                                            ><AdminSelect
+                                                v-model="item.type"
+                                                :options="galleryTypes"
+                                        /></AdminField>
+                                        <AdminField label="Image/Video URL" class="col-span-2"
+                                            ><AdminInput v-model="item.image"
+                                        /></AdminField>
+                                    </div>
                                     <AdminField label="Caption"
                                         ><AdminInput v-model="item.caption"
                                     /></AdminField>
@@ -165,6 +177,7 @@ import AdminField from '@/components/admin/AdminField.vue';
 import AdminInput from '@/components/admin/AdminInput.vue';
 import AdminRepeaterCard from '@/components/admin/AdminRepeaterCard.vue';
 import AdminSection from '@/components/admin/AdminSection.vue';
+import AdminSelect from '@/components/admin/AdminSelect.vue';
 import AdminStringList from '@/components/admin/AdminStringList.vue';
 import { useAdminPreviewPublisher, useAdminPreviewScrollSync } from '@/composables/useAdminPreview';
 import AdminLayout from '@/layouts/AdminLayout.vue';
@@ -187,8 +200,12 @@ const blank: Hobby = {
 
 const form = useForm(
     isEdit.value ? update(props.hobby!.slug) : store(),
-    props.hobby ? { ...props.hobby } : blank,
+    props.hobby
+        ? { ...props.hobby, gallery: props.hobby.gallery.map((item) => ({ ...item, type: item.type ?? 'image' })) }
+        : blank,
 );
+
+const galleryTypes = ['image', 'video'];
 
 const devices = [
     { key: 'desktop' as const, label: 'Desktop' },
