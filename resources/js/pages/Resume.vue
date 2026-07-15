@@ -48,8 +48,9 @@
 
                     <section class="rs-section">
                         <h2 class="rs-heading">Summary</h2>
-                        <div class="rs-summary">
-                            <p v-for="(para, i) in profile.aboutParagraphs" :key="i" v-html="renderBold(para)"></p>
+                        <div v-if="resumeSummary.length === 0" class="rs-edu-placeholder">Add your resume summary here</div>
+                        <div v-else class="rs-summary">
+                            <p v-for="(para, i) in resumeSummary" :key="i" v-html="renderBold(para)"></p>
                         </div>
                     </section>
 
@@ -63,7 +64,7 @@
                                     <span class="rs-proj-meta">{{ item.meta }}</span>
                                 </div>
                                 <p v-if="item.company" class="rs-proj-tags">{{ item.company }}</p>
-                                <p class="rs-proj-desc">{{ item.description }}</p>
+                                <div class="rs-proj-desc" v-html="renderRichText(item.description)"></div>
                             </div>
                         </div>
                     </section>
@@ -76,7 +77,7 @@
                                     <h3 class="rs-proj-title">{{ item.title }}</h3>
                                     <span class="rs-proj-meta">{{ item.meta }}</span>
                                 </div>
-                                <p class="rs-proj-desc">{{ item.description }}</p>
+                                <div class="rs-proj-desc" v-html="renderRichText(item.description)"></div>
                                 <p v-if="item.tags?.length" class="rs-proj-tags">Tech: {{ item.tags.join(', ') }}</p>
                             </div>
                         </div>
@@ -92,7 +93,7 @@
                                     <span class="rs-proj-meta">{{ item.meta }}</span>
                                 </div>
                                 <p v-if="item.institution" class="rs-proj-tags">{{ item.institution }}</p>
-                                <p class="rs-proj-desc">{{ item.description }}</p>
+                                <div class="rs-proj-desc" v-html="renderRichText(item.description)"></div>
                             </div>
                         </div>
                     </section>
@@ -113,7 +114,7 @@
 
                     <div class="rs-sidebar-section">
                         <h2 class="rs-sidebar-heading">Skills</h2>
-                        <div v-for="category in skillCategories" :key="category.title" class="rs-sidebar-skill-group">
+                        <div v-for="category in resumeSkillCategories" :key="category.title" class="rs-sidebar-skill-group">
                             <span class="rs-sidebar-skill-cat">{{ category.title }}</span>
                             <div v-for="skill in category.skills" :key="skill.name" class="rs-sidebar-skill-row">
                                 <span class="rs-sidebar-skill-name">{{ skill.name }}</span>
@@ -127,7 +128,7 @@
                     <div class="rs-sidebar-section">
                         <h2 class="rs-sidebar-heading">Interests</h2>
                         <ul class="rs-interest-list">
-                            <li v-for="tag in focusTags" :key="tag">{{ tag }}</li>
+                            <li v-for="tag in resumeInterests" :key="tag">{{ tag }}</li>
                         </ul>
                     </div>
                 </aside>
@@ -143,21 +144,26 @@ import { useAdminPreviewOverrides, useAdminPreviewScrollTarget } from '@/composa
 import {
     education as baseEducation,
     experience as baseExperience,
-    focusTags as baseFocusTags,
     jobs as baseJobs,
     profile as baseProfile,
-    skillCategories as baseSkillCategories,
+    resumeInterests as baseResumeInterests,
+    resumeSkillCategories as baseResumeSkillCategories,
+    resumeSummary as baseResumeSummary,
 } from '@/data/portfolio';
 import { recordResumeDownload } from '@/lib/analytics';
+import { renderBold, renderRichText } from '@/lib/richText';
 import type { PortfolioMeta } from '@/types/admin';
 
-const overrides = useAdminPreviewOverrides<Pick<PortfolioMeta, 'profile' | 'experience' | 'focusTags' | 'skillCategories' | 'education' | 'jobs'>>('portfolio-meta');
+const overrides = useAdminPreviewOverrides<
+    Pick<PortfolioMeta, 'profile' | 'experience' | 'resumeInterests' | 'resumeSkillCategories' | 'resumeSummary' | 'education' | 'jobs'>
+>('portfolio-meta');
 useAdminPreviewScrollTarget();
 
 const profile = computed(() => overrides.profile ?? baseProfile);
 const experience = computed(() => overrides.experience ?? baseExperience);
-const focusTags = computed(() => overrides.focusTags ?? baseFocusTags);
-const skillCategories = computed(() => overrides.skillCategories ?? baseSkillCategories);
+const resumeSummary = computed(() => overrides.resumeSummary ?? baseResumeSummary);
+const resumeInterests = computed(() => overrides.resumeInterests ?? baseResumeInterests);
+const resumeSkillCategories = computed(() => overrides.resumeSkillCategories ?? baseResumeSkillCategories);
 const jobs = computed(() => overrides.jobs ?? baseJobs);
 const recentJobs = computed(() => jobs.value.slice(0, 3));
 const education = computed(() => overrides.education ?? baseEducation);
@@ -167,10 +173,6 @@ const lastName = computed(() => profile.value.name.split(' ').slice(1).join(' ')
 
 const pageEl = ref<HTMLElement | null>(null);
 const isExporting = ref(false);
-
-function renderBold(text: string) {
-    return text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-}
 
 async function downloadPdf() {
     if (!pageEl.value || isExporting.value) return;
@@ -185,11 +187,15 @@ async function downloadPdf() {
             scale: 2,
             backgroundColor: '#ffffff',
             useCORS: true,
+            width: pageEl.value.clientWidth,
+            height: pageEl.value.clientHeight,
+            windowWidth: pageEl.value.clientWidth,
+            windowHeight: pageEl.value.clientHeight,
         });
 
         const pdf = new jsPDF({ unit: 'mm', format: 'a4' });
         const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+        const pdfHeight = pdf.internal.pageSize.getHeight();
 
         pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, pdfWidth, pdfHeight);
         pdf.save(`${profile.value.name.replace(/\s+/g, '-')}-Resume.pdf`);
@@ -230,7 +236,8 @@ async function downloadPdf() {
 
 .rs-page {
     display: flex;
-    min-height: 297mm;
+    height: 297mm;
+    overflow: hidden;
     background: var(--bg);
     border: 1px solid var(--border-strong);
 
@@ -417,6 +424,37 @@ async function downloadPdf() {
     font-size: 11px;
     line-height: 1.4;
     color: var(--text-dim);
+
+    :deep(p) {
+        margin: 0 0 4px;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    :deep(ul) {
+        margin: 0 0 4px;
+        padding-left: 14px;
+        list-style: disc;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    :deep(li) {
+        margin: 0 0 2px;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    :deep(strong) {
+        color: var(--text);
+        font-weight: 700;
+    }
 }
 
 .rs-proj-tags {
@@ -557,7 +595,8 @@ async function downloadPdf() {
     }
 
     .rs-page {
-        min-height: 0;
+        height: auto;
+        overflow: visible;
     }
 
     .rs-main {
@@ -585,7 +624,8 @@ async function downloadPdf() {
     }
 
     .rs-page {
-        min-height: 0;
+        height: auto;
+        overflow: visible;
         border: none;
         flex-direction: row;
     }

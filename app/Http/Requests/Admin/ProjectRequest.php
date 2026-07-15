@@ -40,6 +40,7 @@ class ProjectRequest extends FormRequest
             'processSteps' => ['present', 'array'],
             'processSteps.*.title' => ['nullable', 'string'],
             'processSteps.*.description' => ['nullable', 'string'],
+            'contributionsText' => ['nullable', 'string'],
         ];
     }
 }

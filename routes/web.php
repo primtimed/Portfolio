@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AiController;
 use App\Http\Controllers\AnalyticsController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -16,5 +17,9 @@ Route::get('/project/{project}', fn (string $project) => Inertia::render('projec
 
 Route::get('/hobbies/{hobby}', fn (string $hobby) => Inertia::render('hobbies/Hobby', ['slug' => $hobby]))
     ->name('hobbies.show');
+
+Route::get('/ai/project/{project}', [AiController::class, 'showProject'])->name('ai.project');
+Route::get('/ai/hobbies/{hobby}', [AiController::class, 'showHobby'])->name('ai.hobby');
+Route::get('/ai/{page}', [AiController::class, 'show'])->name('ai.show');
 
 require __DIR__.'/admin.php';

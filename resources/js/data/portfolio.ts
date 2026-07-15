@@ -1,4 +1,4 @@
-import type { AboutStat, EducationItem, ExperienceItem, FeaturedGame, FeaturedProject, JobItem, SkillCategory } from '@/types/portfolio';
+import type { AboutStat, EducationItem, ExperienceItem, JobItem, RoadmapItem, SkillCategory } from '@/types/portfolio';
 
 export const profile = {
     "name": "Brian Olthof",
@@ -9,13 +9,13 @@ export const profile = {
     "github": "https://github.com/primtimed",
     "linkedin": "https://linkedin.com/in/brian-olthof-63789126a",
     "backgroundVideoUrl": "/videos/background.mp4",
-    "photoUrl": "https://media.discordapp.net/attachments/1284942705453039646/1525644292205576313/file_000000008bc472469d8175fdf40961cc_1.png?ex=6a542278&is=6a52d0f8&hm=fd2bc50f600d95d9d406215387fd9f68c3ae446ae0947c3fb15d6356b6bf2ade&=&format=webp&quality=lossless&width=648&height=864",
+    "photoUrl": "/storage/Image/Profile/Profile.png",
     "aboutEyebrow": "Software engineer specialized in gameplay systems",
     "aboutHeading": "My name is Brian Olthof, game developer.",
     "aboutCtaPrompt": "Are you interested in my work?",
     "aboutCtaLabel": "Contact me!",
     "aboutParagraphs": [
-        "Unity Developer with 4 years of experience in **C#** and **Unity**, specializing in gameplay systems and technical problem-solving. Additionally experienced in web application development using **PHP** (**Laravel**), **TypeScript** with **Vue 3**, and Blade templating. Currently pursuing a degree in Game Development and seeking a junior Unity developer position to contribute strong technical and creative skills."
+        "**Unity Developer** with **4 years of experience** building gameplay systems and tools in **C#** and **Unity**. Experienced in **object-oriented programming**, **gameplay mechanics**, **debugging**, and **version control**. Also skilled in **PHP (Laravel)**, **TypeScript**, and **Vue 3** through professional web development experience. Currently completing a **Bachelor's degree in Creative Media & Game Technologies** and seeking a **Junior Unity Developer** position where I can contribute to gameplay programming and continue growing as a game engineer."
     ]
 };
 
@@ -23,7 +23,7 @@ export const aboutStats: AboutStat[] = [
     {
         "icon": "device",
         "value": "4+",
-        "label": "Finished Projects"
+        "label": "YEARS EXPERIENCE"
     },
     {
         "icon": "controller",
@@ -42,13 +42,9 @@ export const aboutStats: AboutStat[] = [
     }
 ];
 
-export const focusTags: string[] = [
-    "Gaming",
-    "Archery",
-    "Summer terrace",
-    "Anime / Series / Esport",
-    "Music"
-];
+export const roadmap: RoadmapItem[] = [];
+
+export const focusTags: string[] = [];
 
 export const skillCategories: SkillCategory[] = [
     {
@@ -64,7 +60,19 @@ export const skillCategories: SkillCategory[] = [
                 "level": 4
             },
             {
-                "name": null,
+                "name": "AI",
+                "level": 4
+            },
+            {
+                "name": "Input System",
+                "level": 3
+            },
+            {
+                "name": "Gameplay Engineering",
+                "level": 3
+            },
+            {
+                "name": "Physics",
                 "level": 3
             }
         ]
@@ -88,6 +96,24 @@ export const skillCategories: SkillCategory[] = [
         ]
     },
     {
+        "title": "Tools",
+        "icon": "code",
+        "skills": [
+            {
+                "name": "Git",
+                "level": 4
+            },
+            {
+                "name": "JetBrains Rider",
+                "level": 4
+            },
+            {
+                "name": "Jira",
+                "level": 3
+            }
+        ]
+    },
+    {
         "title": "Languages",
         "icon": "code",
         "skills": [
@@ -101,7 +127,7 @@ export const skillCategories: SkillCategory[] = [
             },
             {
                 "name": "German",
-                "level": 1
+                "level": 2
             }
         ]
     }
@@ -109,110 +135,7 @@ export const skillCategories: SkillCategory[] = [
 
 export const featuredGamesItchUrl = "#";
 
-export const featuredGames: FeaturedGame[] = [
-    {
-        "title": "Momentum FPS",
-        "tagline": "Multiplayer movement tech — wallrun, dash, grapple, slide.",
-        "genre": "Multiplayer FPS",
-        "engine": "Unity",
-        "status": "Prototype",
-        "image": "https://picsum.photos/seed/momentum-fps/600/900",
-        "url": "#"
-    },
-    {
-        "title": "Card Tactics AI",
-        "tagline": "Card strategy game with an AI that adapts mid-match.",
-        "genre": "Strategy",
-        "engine": "Unity",
-        "status": "Prototype",
-        "image": "https://picsum.photos/seed/card-tactics-ai/600/900",
-        "url": "#"
-    },
-    {
-        "title": "Streaming Hub UI",
-        "tagline": "TV-first, remote-navigable streaming hub interface.",
-        "genre": "Interactive UI",
-        "engine": "Web",
-        "status": "In Development",
-        "image": "https://picsum.photos/seed/streaming-hub-ui/600/900",
-        "url": "#"
-    },
-    {
-        "title": "Streaming Hub UI",
-        "tagline": "TV-first, remote-navigable streaming hub interface.",
-        "genre": "Interactive UI",
-        "engine": "Web",
-        "status": "In Development",
-        "image": "https://picsum.photos/seed/streaming-hub-ui/600/900",
-        "url": "#"
-    },
-    {
-        "title": "Streaming Hub UI",
-        "tagline": "TV-first, remote-navigable streaming hub interface.",
-        "genre": "Interactive UI",
-        "engine": "Web",
-        "status": "In Development",
-        "image": "https://picsum.photos/seed/streaming-hub-ui/600/900",
-        "url": "#"
-    },
-    {
-        "title": "Streaming Hub UI",
-        "tagline": "TV-first, remote-navigable streaming hub interface.",
-        "genre": "Interactive UI",
-        "engine": "Web",
-        "status": "In Development",
-        "image": "https://picsum.photos/seed/streaming-hub-ui/600/900",
-        "url": "#"
-    },
-    {
-        "title": "Streaming Hub UI",
-        "tagline": "TV-first, remote-navigable streaming hub interface.",
-        "genre": "Interactive UI",
-        "engine": "Web",
-        "status": "In Development",
-        "image": "https://picsum.photos/seed/streaming-hub-ui/600/900",
-        "url": "#"
-    },
-    {
-        "title": "Streaming Hub UI",
-        "tagline": "TV-first, remote-navigable streaming hub interface.",
-        "genre": "Interactive UI",
-        "engine": "Web",
-        "status": "In Development",
-        "image": "https://picsum.photos/seed/streaming-hub-ui/600/900",
-        "url": "#"
-    },
-    {
-        "title": "Architecture Sandbox",
-        "tagline": "Playable showcase of state machines and modular systems.",
-        "genre": "Tech Demo",
-        "engine": "Unity",
-        "status": "In Development",
-        "image": "https://picsum.photos/seed/architecture-sandbox/600/900",
-        "url": "#"
-    }
-];
-
-export const featuredProject: FeaturedProject = {
-    "title": "Momentum FPS",
-    "tagline": "Multiplayer movement tech — wallrun, dash, grapple, slide.",
-    "description": "A multiplayer FPS prototype built around a custom momentum-driven movement system. Focused on server-authoritative networking, client-side prediction, and tuning movement feel so it stays responsive under real-world latency.",
-    "image": "https://picsum.photos/seed/momentum-fps-spotlight/1200/800",
-    "status": "Prototype",
-    "url": "#",
-    "sourceUrl": "#",
-    "tags": [
-        "Unity",
-        "C#",
-        "Netcode",
-        "Multiplayer"
-    ],
-    "highlights": [
-        "Server-authoritative movement with client-side prediction and reconciliation",
-        "Wallrun, dash, grapple, and slide chained into a single momentum system",
-        "Custom network tick loop tuned for low-latency multiplayer feel"
-    ]
-};
+export const featuredProjectSlug = "momentum-fps";
 
 export const featuredProjectStats: AboutStat[] = [
     {
@@ -243,40 +166,148 @@ export const portfolioCta = {
     ]
 };
 
-export const experience: ExperienceItem[] = [];
+export const resumeSummary: string[] = [
+    "**Unity Developer** with **4 years of experience** building gameplay systems and tools in **C#** and **Unity**. Experienced in **object-oriented programming**, **gameplay mechanics**, **debugging**, and **version control**. Also skilled in **PHP (Laravel)**, **TypeScript**, and **Vue 3** through professional web development experience. Currently completing a **Bachelor's degree in Creative Media & Game Technologies** and seeking a **Junior Unity Developer** position where I can contribute to gameplay programming and continue growing as a game engineer."
+];
+
+export const resumeSkillCategories: SkillCategory[] = [
+    {
+        "title": "Gameplay Engineer",
+        "icon": "gamepad",
+        "skills": [
+            {
+                "name": "Unity",
+                "level": 4
+            },
+            {
+                "name": "C#",
+                "level": 4
+            },
+            {
+                "name": "AI",
+                "level": 4
+            },
+            {
+                "name": "Input System",
+                "level": 3
+            },
+            {
+                "name": "Gameplay Engineering",
+                "level": 3
+            },
+            {
+                "name": "Physics",
+                "level": 3
+            }
+        ]
+    },
+    {
+        "title": "Web Engineer",
+        "icon": "code",
+        "skills": [
+            {
+                "name": "PHP",
+                "level": 3
+            },
+            {
+                "name": "Laravel",
+                "level": 3
+            },
+            {
+                "name": "Vue 3",
+                "level": 3
+            },
+            {
+                "name": "JavaScript / TypeScript",
+                "level": 2
+            }
+        ]
+    },
+    {
+        "title": "Tools",
+        "icon": "code",
+        "skills": [
+            {
+                "name": "Git",
+                "level": 4
+            },
+            {
+                "name": "JetBrains Rider",
+                "level": 4
+            },
+            {
+                "name": "Jira",
+                "level": 3
+            }
+        ]
+    },
+    {
+        "title": "Languages",
+        "icon": "code",
+        "skills": [
+            {
+                "name": "Dutch",
+                "level": 5
+            },
+            {
+                "name": "English",
+                "level": 4
+            },
+            {
+                "name": "German",
+                "level": 2
+            }
+        ]
+    }
+];
+
+export const resumeInterests: string[] = [
+    "Gaming",
+    "Archery",
+    "Summer terrace",
+    "Anime / Series / Esport",
+    "Music"
+];
+
+export const experience: ExperienceItem[] = [
+    {
+        "title": "Multiplayer Survival Game",
+        "meta": null,
+        "description": "- Developed player movement, inventory, crafting, and interaction systems.\n- Implemented multiplayer synchronization using Unity Netcode.\n- Optimized gameplay systems to improve performance and stability.",
+        "tags": [
+            "Unity",
+            "C#",
+            "Netcode for GameObjects"
+        ]
+    }
+];
 
 export const education: EducationItem[] = [
     {
         "title": "Creative Development (Game Engineer)",
         "institution": "Deltion Colage",
         "meta": "2022 - 2026",
-        "description": "Description"
+        "description": "- Studied **Gameplay Programming** using **Unity** and **C#**.\n- Gained experience with **AI**, **Networking**, and **Computer Graphics**.\n- Developed complete game prototypes from concept to playable builds."
     },
     {
         "title": "Pastry chef",
         "institution": "Roc Van Twente",
         "meta": "2018 - 2021",
-        "description": "Description"
+        "description": "- Learned professional baking and pastry techniques.\n- Worked under strict deadlines while maintaining quality standards.\n- Developed strong teamwork and communication skills."
     }
 ];
 
 export const jobs: JobItem[] = [
     {
         "title": "Talentrush - Software development intern",
-        "company": null,
+        "company": "Talentrush",
         "meta": "09/2025 - 07/2026",
-        "description": null
+        "description": "- Developed and maintained web applications using **PHP (Laravel)**, **Vue 3**, and **TypeScript**.\n- Built reusable frontend components and backend API endpoints.\n- Fixed bugs and implemented new features based on client requirements."
     },
     {
         "title": "Domino's - Shift Management",
-        "company": null,
+        "company": "Domino's",
         "meta": "03/2021 – 09/2025",
-        "description": null
-    },
-    {
-        "title": "Van Otten - Pastry Chef",
-        "company": null,
-        "meta": "02/2019 – 03/2021",
-        "description": null
+        "description": "- Led daily operations and coordinated team members during busy shifts.\n- Trained new employees while maintaining high customer service standards.\n- Developed strong **leadership**, **communication**, and **problem-solving** skills in a fast-paced environment."
     }
 ];

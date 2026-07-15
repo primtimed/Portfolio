@@ -52,26 +52,7 @@ class PortfolioMetaRequest extends FormRequest
 
             'featuredGamesItchUrl' => ['nullable', 'string'],
 
-            'featuredGames' => ['present', 'array'],
-            'featuredGames.*.title' => ['nullable', 'string'],
-            'featuredGames.*.tagline' => ['nullable', 'string'],
-            'featuredGames.*.genre' => ['nullable', 'string'],
-            'featuredGames.*.engine' => ['nullable', 'string'],
-            'featuredGames.*.status' => ['nullable', Rule::in($statuses)],
-            'featuredGames.*.image' => ['nullable', 'string'],
-            'featuredGames.*.url' => ['nullable', 'string'],
-
-            'featuredProject.title' => ['nullable', 'string'],
-            'featuredProject.tagline' => ['nullable', 'string'],
-            'featuredProject.description' => ['nullable', 'string'],
-            'featuredProject.image' => ['nullable', 'string'],
-            'featuredProject.status' => ['nullable', Rule::in($statuses)],
-            'featuredProject.tags' => ['present', 'array'],
-            'featuredProject.tags.*' => ['nullable', 'string'],
-            'featuredProject.highlights' => ['present', 'array'],
-            'featuredProject.highlights.*' => ['nullable', 'string'],
-            'featuredProject.url' => ['nullable', 'string'],
-            'featuredProject.sourceUrl' => ['nullable', 'string'],
+            'featuredProjectSlug' => ['nullable', 'string'],
 
             'featuredProjectStats' => ['present', 'array'],
             'featuredProjectStats.*.icon' => ['nullable', Rule::in($statIcons)],
@@ -84,6 +65,26 @@ class PortfolioMetaRequest extends FormRequest
             'portfolioCta.lines.*' => ['nullable', 'string'],
             'portfolioCta.buttonLabel' => ['nullable', 'string'],
             'portfolioCta.buttonUrl' => ['nullable', 'string'],
+
+            'roadmap' => ['present', 'array'],
+            'roadmap.*.title' => ['nullable', 'string'],
+            'roadmap.*.meta' => ['nullable', 'string'],
+            'roadmap.*.description' => ['nullable', 'string'],
+            'roadmap.*.details' => ['nullable', 'string'],
+            'roadmap.*.url' => ['nullable', 'string'],
+
+            'resumeSummary' => ['present', 'array'],
+            'resumeSummary.*' => ['nullable', 'string'],
+
+            'resumeSkillCategories' => ['present', 'array'],
+            'resumeSkillCategories.*.title' => ['nullable', 'string'],
+            'resumeSkillCategories.*.icon' => ['nullable', Rule::in($skillIcons)],
+            'resumeSkillCategories.*.skills' => ['present', 'array'],
+            'resumeSkillCategories.*.skills.*.name' => ['nullable', 'string'],
+            'resumeSkillCategories.*.skills.*.level' => ['nullable', 'integer', 'between:1,5'],
+
+            'resumeInterests' => ['present', 'array'],
+            'resumeInterests.*' => ['nullable', 'string'],
 
             'experience' => ['present', 'array'],
             'experience.*.title' => ['nullable', 'string'],

@@ -11,6 +11,14 @@ export interface ExperienceItem {
     tags?: string[];
 }
 
+export interface RoadmapItem {
+    title: string;
+    meta: string;
+    description: string;
+    details: string;
+    url: string;
+}
+
 export interface EducationItem {
     title: string;
     institution: string;
@@ -23,16 +31,6 @@ export interface JobItem {
     company: string;
     meta: string;
     description: string;
-}
-
-export interface FeaturedGame {
-    title: string;
-    tagline: string;
-    genre: string;
-    engine: string;
-    status: 'Prototype' | 'In Development' | 'Released';
-    image: string;
-    url: string;
 }
 
 export interface FeaturedProject {
@@ -91,4 +89,5 @@ export interface Project {
     media?: ProjectMediaItem[];
     outcomes?: ProjectStat[];
     processSteps?: ProjectProcessStep[];
+    contributionsText?: string;
 }

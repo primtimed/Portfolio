@@ -21,8 +21,8 @@
                         <div class="timeline-card">
                             <h3 class="timeline-title">{{ item.title }}</h3>
                             <span class="timeline-meta">{{ item.meta }}</span>
-                            <p class="timeline-desc">{{ item.description }}</p>
-                            <a href="#" class="timeline-cta">
+                            <p class="timeline-desc" v-html="renderBold(item.description)"></p>
+                            <button type="button" class="timeline-cta" @click="activeItem = item">
                                 <svg
                                     viewBox="0 0 24 24"
                                     width="12"
@@ -34,20 +34,27 @@
                                     />
                                 </svg>
                                 View details
-                            </a>
+                            </button>
                         </div>
                     </RevealOnView>
                 </div>
             </div>
         </div>
+
+        <RoadmapDetailsModal :item="activeItem" @close="activeItem = null" />
     </section>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
+import RoadmapDetailsModal from '@/components/home/RoadmapDetailsModal.vue';
 import RevealOnView from '@/components/ui/RevealOnView.vue';
-import type { ExperienceItem } from '@/types/portfolio';
+import { renderBold } from '@/lib/richText';
+import type { RoadmapItem } from '@/types/portfolio';
 
-defineProps<{ items: ExperienceItem[] }>();
+defineProps<{ items: RoadmapItem[] }>();
+
+const activeItem = ref<RoadmapItem | null>(null);
 </script>
 
 <style lang="scss" scoped>
@@ -197,6 +204,11 @@ defineProps<{ items: ExperienceItem[] }>();
     font-size: 15px;
     line-height: 1.6;
     color: var(--text-dim);
+
+    :deep(strong) {
+        color: var(--text);
+        font-weight: 700;
+    }
 }
 
 .timeline-cta {
@@ -204,14 +216,17 @@ defineProps<{ items: ExperienceItem[] }>();
     align-items: center;
     gap: 8px;
     padding: 10px 18px;
+    border: none;
     border-radius: 999px;
     background: var(--bg-sunken);
     color: var(--text);
+    font: inherit;
     font-size: 12px;
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
     text-decoration: none;
+    cursor: pointer;
     transition:
         background 0.25s cubic-bezier(0.22, 1, 0.36, 1),
         transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);

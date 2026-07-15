@@ -153,20 +153,21 @@
                 </AdminRepeaterCard>
             </AdminSection>
 
-            <!-- Experience (Timeline) -->
-            <AdminSection title="Experience (timeline)" preview-target=".timeline-section">
+            <!-- Roadmap (Timeline) -->
+            <AdminSection title="Roadmap (timeline)" preview-target=".timeline-section">
                 <AdminRepeaterCard
-                    :model-value="form.experience"
-                    label="experience item"
+                    :model-value="form.roadmap"
+                    label="roadmap item"
                     @add="
-                        form.experience.push({
+                        form.roadmap.push({
                             title: '',
                             meta: '',
                             description: '',
-                            tags: [],
+                            details: '',
+                            url: '',
                         })
                     "
-                    @remove="(i) => form.experience.splice(i, 1)"
+                    @remove="(i) => form.roadmap.splice(i, 1)"
                 >
                     <template #default="{ item }">
                         <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -177,13 +178,18 @@
                                 ><AdminInput v-model="item.meta"
                             /></AdminField>
                         </div>
-                        <AdminField label="Description"
+                        <AdminField label="Card description (short teaser on the timeline)"
                             ><AdminTextarea
                                 v-model="item.description"
                                 :rows="2"
                         /></AdminField>
-                        <AdminField label="Tags"
-                            ><AdminStringList v-model="item.tags"
+                        <AdminField label="Modal details (supports ## headings, - bullets, **bold**)"
+                            ><AdminTextarea
+                                v-model="item.details"
+                                :rows="6"
+                        /></AdminField>
+                        <AdminField label="View Project URL (optional button inside the modal)"
+                            ><AdminInput v-model="item.url" placeholder="https://…"
                         /></AdminField>
                     </template>
                 </AdminRepeaterCard>
@@ -273,95 +279,35 @@
             </AdminSection>
 
             <!-- Featured games -->
-            <AdminSection title="Featured games" preview-target="#games">
-                <AdminField label="Itch.io URL"
+            <AdminSection title="Featured games (My Projects Library)" preview-target="#games">
+                <p class="text-xs text-(--text-faint)">
+                    The library automatically shows every project from
+                    <a :href="projectsIndex().url" class="underline hover:text-(--accent)">Projects</a>
+                    — add or edit entries there.
+                </p>
+                <AdminField label="Itch.io URL (the &quot;more on itch.io&quot; tile at the end)"
                     ><AdminInput v-model="form.featuredGamesItchUrl"
                 /></AdminField>
-                <AdminRepeaterCard
-                    :model-value="form.featuredGames"
-                    label="featured game"
-                    @add="
-                        form.featuredGames.push({
-                            title: '',
-                            tagline: '',
-                            genre: '',
-                            engine: '',
-                            status: 'Prototype',
-                            image: '',
-                            url: '',
-                        })
-                    "
-                    @remove="(i) => form.featuredGames.splice(i, 1)"
-                >
-                    <template #default="{ item }">
-                        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                            <AdminField label="Title"
-                                ><AdminInput v-model="item.title"
-                            /></AdminField>
-                            <AdminField label="Tagline"
-                                ><AdminInput v-model="item.tagline"
-                            /></AdminField>
-                            <AdminField label="Genre"
-                                ><AdminInput v-model="item.genre"
-                            /></AdminField>
-                            <AdminField label="Engine"
-                                ><AdminInput v-model="item.engine"
-                            /></AdminField>
-                            <AdminField label="Status"
-                                ><AdminSelect
-                                    v-model="item.status"
-                                    :options="statuses"
-                            /></AdminField>
-                            <AdminField label="Image URL"
-                                ><AdminInput v-model="item.image"
-                            /></AdminField>
-                            <AdminField label="URL" class="col-span-2"
-                                ><AdminInput v-model="item.url"
-                            /></AdminField>
-                        </div>
-                    </template>
-                </AdminRepeaterCard>
             </AdminSection>
 
             <!-- Featured project -->
             <AdminSection title="Featured project (homepage spotlight)" preview-target="#featured-project">
-                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <AdminField label="Title"
-                        ><AdminInput v-model="form.featuredProject.title"
-                    /></AdminField>
-                    <AdminField label="Tagline"
-                        ><AdminInput v-model="form.featuredProject.tagline"
-                    /></AdminField>
-                </div>
-                <AdminField label="Description"
-                    ><AdminTextarea
-                        v-model="form.featuredProject.description"
-                        :rows="3"
-                /></AdminField>
-                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <AdminField label="Image URL"
-                        ><AdminInput v-model="form.featuredProject.image"
-                    /></AdminField>
-                    <AdminField label="Status"
-                        ><AdminSelect
-                            v-model="form.featuredProject.status"
-                            :options="statuses"
-                    /></AdminField>
-                </div>
-                <AdminField label="Tags"
-                    ><AdminStringList v-model="form.featuredProject.tags"
-                /></AdminField>
-                <AdminField label="Highlights"
-                    ><AdminStringList v-model="form.featuredProject.highlights"
-                /></AdminField>
-                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <AdminField label="URL"
-                        ><AdminInput v-model="form.featuredProject.url"
-                    /></AdminField>
-                    <AdminField label="Source URL"
-                        ><AdminInput v-model="form.featuredProject.sourceUrl"
-                    /></AdminField>
-                </div>
+                <AdminField label="Project">
+                    <select
+                        v-model="form.featuredProjectSlug"
+                        class="w-full rounded-lg border border-(--border-strong) bg-(--bg-sunken) px-3 py-2 text-sm text-(--text) outline-none focus:border-(--accent)"
+                    >
+                        <option value="">— Select a project —</option>
+                        <option v-for="p in projects" :key="p.title" :value="projectSlug(p.title)">
+                            {{ p.title }}
+                        </option>
+                    </select>
+                </AdminField>
+                <p v-if="!projects.length" class="text-xs text-(--text-faint)">
+                    No projects yet —
+                    <a :href="projectsIndex().url" class="underline hover:text-(--accent)">add one</a>
+                    first.
+                </p>
             </AdminSection>
 
             <!-- Featured project stats -->
@@ -459,40 +405,20 @@ import AdminSelect from '@/components/admin/AdminSelect.vue';
 import AdminStringList from '@/components/admin/AdminStringList.vue';
 import AdminTextarea from '@/components/admin/AdminTextarea.vue';
 import { useAdminPreviewPublisher, useAdminPreviewScrollSync } from '@/composables/useAdminPreview';
+import { projectSlug } from '@/data/projects';
 import AdminLayout from '@/layouts/AdminLayout.vue';
 import { update } from '@/routes/admin/portfolio-meta';
+import { index as projectsIndex } from '@/routes/admin/projects';
 import type { PortfolioMeta } from '@/types/admin';
+import type { Project } from '@/types/portfolio';
 
-type PortfolioMetaFormData = Omit<
-    PortfolioMeta,
-    'featuredProject' | 'experience'
-> & {
-    featuredProject: Omit<PortfolioMeta['featuredProject'], 'sourceUrl'> & {
-        sourceUrl: string;
-    };
-    experience: (Omit<PortfolioMeta['experience'][number], 'tags'> & {
-        tags: string[];
-    })[];
-};
+const props = defineProps<{ meta: PortfolioMeta; projects: Project[] }>();
 
-const props = defineProps<{ meta: PortfolioMeta }>();
-
-const form = useForm(update(), {
-    ...props.meta,
-    featuredProject: {
-        ...props.meta.featuredProject,
-        sourceUrl: props.meta.featuredProject.sourceUrl ?? '',
-    },
-    experience: props.meta.experience.map((item) => ({
-        ...item,
-        tags: item.tags ?? [],
-    })),
-} satisfies PortfolioMetaFormData);
+const form = useForm(update(), { ...props.meta } satisfies PortfolioMeta);
 
 const statIcons = ['device', 'controller', 'package', 'trophy'];
 const skillIcons = ['code', 'gamepad', 'network', 'tools'];
 const skillLevels = [1, 2, 3, 4, 5];
-const statuses = ['Prototype', 'In Development', 'Released'];
 
 const devices = [
     { key: 'desktop' as const, label: 'Desktop' },
@@ -507,14 +433,13 @@ const previewFrame = ref<HTMLIFrameElement | null>(null);
 useAdminPreviewPublisher('portfolio-meta', previewFrame, () => ({
     profile: form.profile,
     aboutStats: form.aboutStats,
+    roadmap: form.roadmap,
     focusTags: form.focusTags,
     skillCategories: form.skillCategories,
     featuredGamesItchUrl: form.featuredGamesItchUrl,
-    featuredGames: form.featuredGames,
-    featuredProject: form.featuredProject,
+    featuredProjectSlug: form.featuredProjectSlug,
     featuredProjectStats: form.featuredProjectStats,
     portfolioCta: form.portfolioCta,
-    experience: form.experience,
 }));
 
 useAdminPreviewScrollSync(previewFrame);

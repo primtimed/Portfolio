@@ -127,6 +127,16 @@
                             /></AdminField>
                         </AdminSection>
 
+                        <AdminSection title="Contributions" preview-target=".cs-contrib">
+                            <AdminField
+                                label="Body text"
+                                :error="form.errors.contributionsText"
+                                hint="Also supports ## headings, - bullets (indent with 2 spaces to nest), and **bold**. The side rail pulls automatically from the Gallery images below."
+                            >
+                                <AdminRichTextEditor v-model="form.contributionsText" :rows="10" />
+                            </AdminField>
+                        </AdminSection>
+
                         <AdminSection title="Process (“My Approach”)" preview-target=".cs-process">
                             <AdminRepeaterCard
                                 :model-value="form.processSteps"
@@ -226,6 +236,7 @@ import AdminButton from '@/components/admin/AdminButton.vue';
 import AdminField from '@/components/admin/AdminField.vue';
 import AdminInput from '@/components/admin/AdminInput.vue';
 import AdminRepeaterCard from '@/components/admin/AdminRepeaterCard.vue';
+import AdminRichTextEditor from '@/components/admin/AdminRichTextEditor.vue';
 import AdminSection from '@/components/admin/AdminSection.vue';
 import AdminSelect from '@/components/admin/AdminSelect.vue';
 import AdminStringList from '@/components/admin/AdminStringList.vue';
@@ -238,7 +249,7 @@ import type { Project, ProjectMediaItem, ProjectProcessStep, ProjectStat } from 
 
 type ProjectFormData = Omit<
     Project,
-    'role' | 'backgroundVideoUrl' | 'sourceUrl' | 'media' | 'outcomes' | 'processSteps'
+    'role' | 'backgroundVideoUrl' | 'sourceUrl' | 'media' | 'outcomes' | 'processSteps' | 'contributionsText'
 > & {
     role: string;
     backgroundVideoUrl: string;
@@ -246,6 +257,7 @@ type ProjectFormData = Omit<
     media: ProjectMediaItem[];
     outcomes: ProjectStat[];
     processSteps: ProjectProcessStep[];
+    contributionsText: string;
 };
 
 const props = defineProps<{ project: Project | null; index: number | null }>();
@@ -269,6 +281,7 @@ const blank: ProjectFormData = {
     media: [],
     outcomes: [],
     processSteps: [],
+    contributionsText: '',
 };
 
 const form = useForm(
@@ -282,6 +295,7 @@ const form = useForm(
               media: props.project.media ?? [],
               outcomes: props.project.outcomes ?? [],
               processSteps: props.project.processSteps ?? [],
+              contributionsText: props.project.contributionsText ?? '',
           }
         : blank,
 );
@@ -320,6 +334,7 @@ useAdminPreviewPublisher('project', previewFrame, () => ({
         media: form.media,
         outcomes: form.outcomes,
         processSteps: form.processSteps,
+        contributionsText: form.contributionsText,
     },
 }));
 

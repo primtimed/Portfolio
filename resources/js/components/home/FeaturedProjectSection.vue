@@ -116,7 +116,7 @@
                     <p class="spotlight-cta-prompt">Curious how it works under the hood?</p>
                     <div class="spotlight-actions">
                         <a
-                            :href="project.url"
+                            :href="caseStudyUrl"
                             target="_blank"
                             rel="noopener"
                             class="spotlight-cta-btn"
@@ -159,11 +159,13 @@
 import { computed } from 'vue';
 import RevealOnView from '@/components/ui/RevealOnView.vue';
 import { featuredProjectStats as baseStats } from '@/data/portfolio';
+import { projectSlug } from '@/data/projects';
 import type { AboutStat, FeaturedProject } from '@/types/portfolio';
 
 const props = defineProps<{ project: FeaturedProject; stats?: AboutStat[] }>();
 
 const stats = computed(() => props.stats ?? baseStats);
+const caseStudyUrl = computed(() => `/project/${projectSlug(props.project.title)}`);
 </script>
 
 <style lang="scss" scoped>

@@ -14,13 +14,13 @@
 
             <AboutSection :profile="profile" :stats="aboutStats" />
 
-            <TimelineSection :items="experience" />
+            <TimelineSection :items="roadmap" />
 
             <SkillsSection :categories="skillCategories" />
 
-            <FeaturedGamesSection :games="featuredGames" :itch-url="featuredGamesItchUrl" />
+            <FeaturedGamesSection :games="projects" :itch-url="featuredGamesItchUrl" />
 
-            <FeaturedProjectSection :project="featuredProject" :stats="featuredProjectStats" />
+            <FeaturedProjectSection v-if="featuredProject" :project="featuredProject" :stats="featuredProjectStats" />
 
             <PortfolioCtaSection :cta="portfolioCta" />
 
@@ -53,29 +53,28 @@ import SocialRail from '@/components/layout/SocialRail.vue';
 import { useAdminPreviewOverrides, useAdminPreviewScrollTarget } from '@/composables/useAdminPreview';
 import {
     aboutStats as baseAboutStats,
-    experience as baseExperience,
-    featuredGames as baseFeaturedGames,
     featuredGamesItchUrl as baseFeaturedGamesItchUrl,
-    featuredProject as baseFeaturedProject,
+    featuredProjectSlug as baseFeaturedProjectSlug,
     featuredProjectStats as baseFeaturedProjectStats,
     focusTags as baseFocusTags,
     portfolioCta as basePortfolioCta,
     profile as baseProfile,
+    roadmap as baseRoadmap,
     skillCategories as baseSkillCategories,
 } from '@/data/portfolio';
-import type { AboutStat, ExperienceItem, FeaturedGame, FeaturedProject, SkillCategory } from '@/types/portfolio';
+import { projects, projectSlug } from '@/data/projects';
+import type { AboutStat, RoadmapItem, SkillCategory } from '@/types/portfolio';
 
 interface PortfolioMetaOverrides {
     profile: typeof baseProfile;
     aboutStats: AboutStat[];
+    roadmap: RoadmapItem[];
     focusTags: string[];
     skillCategories: SkillCategory[];
     featuredGamesItchUrl: string;
-    featuredGames: FeaturedGame[];
-    featuredProject: FeaturedProject;
+    featuredProjectSlug: string;
     featuredProjectStats: AboutStat[];
     portfolioCta: typeof basePortfolioCta;
-    experience: ExperienceItem[];
 }
 
 const overrides = useAdminPreviewOverrides<PortfolioMetaOverrides>('portfolio-meta');
@@ -83,14 +82,16 @@ useAdminPreviewScrollTarget();
 
 const profile = computed(() => ({ ...baseProfile, ...overrides.profile }));
 const aboutStats = computed(() => overrides.aboutStats ?? baseAboutStats);
+const roadmap = computed(() => overrides.roadmap ?? baseRoadmap);
 const focusTags = computed(() => overrides.focusTags ?? baseFocusTags);
 const skillCategories = computed(() => overrides.skillCategories ?? baseSkillCategories);
 const featuredGamesItchUrl = computed(() => overrides.featuredGamesItchUrl ?? baseFeaturedGamesItchUrl);
-const featuredGames = computed(() => overrides.featuredGames ?? baseFeaturedGames);
-const featuredProject = computed(() => ({ ...baseFeaturedProject, ...overrides.featuredProject }));
+const featuredProjectSlug = computed(() => overrides.featuredProjectSlug ?? baseFeaturedProjectSlug);
+const featuredProject = computed(
+    () => projects.find((p) => projectSlug(p.title) === featuredProjectSlug.value) ?? projects[0],
+);
 const featuredProjectStats = computed(() => overrides.featuredProjectStats ?? baseFeaturedProjectStats);
 const portfolioCta = computed(() => ({ ...basePortfolioCta, ...overrides.portfolioCta }));
-const experience = computed(() => overrides.experience ?? baseExperience);
 </script>
 
 <style lang="scss" scoped>

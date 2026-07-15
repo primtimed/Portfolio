@@ -10,13 +10,16 @@ class PortfolioDataFile extends TsDataFile
     private const EXPORTS = [
         'profile' => null,
         'aboutStats' => 'AboutStat[]',
+        'roadmap' => 'RoadmapItem[]',
         'focusTags' => 'string[]',
         'skillCategories' => 'SkillCategory[]',
         'featuredGamesItchUrl' => null,
-        'featuredGames' => 'FeaturedGame[]',
-        'featuredProject' => 'FeaturedProject',
+        'featuredProjectSlug' => null,
         'featuredProjectStats' => 'AboutStat[]',
         'portfolioCta' => null,
+        'resumeSummary' => 'string[]',
+        'resumeSkillCategories' => 'SkillCategory[]',
+        'resumeInterests' => 'string[]',
         'experience' => 'ExperienceItem[]',
         'education' => 'EducationItem[]',
         'jobs' => 'JobItem[]',
@@ -30,7 +33,7 @@ class PortfolioDataFile extends TsDataFile
     protected function header(): string
     {
         return <<<'TS'
-        import type { AboutStat, EducationItem, ExperienceItem, FeaturedGame, FeaturedProject, JobItem, SkillCategory } from '@/types/portfolio';
+        import type { AboutStat, EducationItem, ExperienceItem, JobItem, RoadmapItem, SkillCategory } from '@/types/portfolio';
         TS;
     }
 
@@ -64,6 +67,15 @@ class PortfolioDataFile extends TsDataFile
      */
     private function readWithDefaults(): array
     {
-        return ['education' => [], 'jobs' => [], ...$this->read()];
+        return [
+            'education' => [],
+            'jobs' => [],
+            'roadmap' => [],
+            'resumeSummary' => [],
+            'resumeSkillCategories' => [],
+            'resumeInterests' => [],
+            'featuredProjectSlug' => '',
+            ...$this->read(),
+        ];
     }
 }

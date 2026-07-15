@@ -86,7 +86,7 @@
 
                         <AdminSection title="Summary" preview-target=".rs-summary">
                             <AdminField label="Summary paragraphs">
-                                <AdminStringList v-model="form.profile.aboutParagraphs" />
+                                <AdminStringList v-model="form.resumeSummary" />
                             </AdminField>
                         </AdminSection>
 
@@ -197,16 +197,16 @@
 
                         <AdminSection title="Skills" preview-target=".rs-sidebar-skill-group">
                             <AdminRepeaterCard
-                                :model-value="form.skillCategories"
+                                :model-value="form.resumeSkillCategories"
                                 label="category"
                                 @add="
-                                    form.skillCategories.push({
+                                    form.resumeSkillCategories.push({
                                         title: '',
                                         icon: 'code',
                                         skills: [],
                                     })
                                 "
-                                @remove="(i) => form.skillCategories.splice(i, 1)"
+                                @remove="(i) => form.resumeSkillCategories.splice(i, 1)"
                             >
                                 <template #default="{ item }">
                                     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -279,7 +279,7 @@
 
                         <AdminSection title="Interests" preview-target=".rs-interest-list">
                             <AdminField label="Interests">
-                                <AdminStringList v-model="form.focusTags" />
+                                <AdminStringList v-model="form.resumeInterests" />
                             </AdminField>
                         </AdminSection>
                     </form>
@@ -326,13 +326,7 @@ import AdminLayout from '@/layouts/AdminLayout.vue';
 import { update } from '@/routes/admin/portfolio-meta';
 import type { PortfolioMeta } from '@/types/admin';
 
-type PortfolioMetaFormData = Omit<
-    PortfolioMeta,
-    'featuredProject' | 'experience'
-> & {
-    featuredProject: Omit<PortfolioMeta['featuredProject'], 'sourceUrl'> & {
-        sourceUrl: string;
-    };
+type PortfolioMetaFormData = Omit<PortfolioMeta, 'experience'> & {
     experience: (Omit<PortfolioMeta['experience'][number], 'tags'> & {
         tags: string[];
     })[];
@@ -345,10 +339,6 @@ const props = defineProps<{ meta: PortfolioMeta }>();
 // every field this form doesn't render (featured games, portfolio CTA, etc).
 const form = useForm(update(), {
     ...props.meta,
-    featuredProject: {
-        ...props.meta.featuredProject,
-        sourceUrl: props.meta.featuredProject.sourceUrl ?? '',
-    },
     experience: props.meta.experience.map((item) => ({
         ...item,
         tags: item.tags ?? [],
@@ -374,10 +364,12 @@ useAdminPreviewPublisher('portfolio-meta', previewFrame, () => ({
     focusTags: form.focusTags,
     skillCategories: form.skillCategories,
     featuredGamesItchUrl: form.featuredGamesItchUrl,
-    featuredGames: form.featuredGames,
-    featuredProject: form.featuredProject,
+    featuredProjectSlug: form.featuredProjectSlug,
     featuredProjectStats: form.featuredProjectStats,
     portfolioCta: form.portfolioCta,
+    resumeSummary: form.resumeSummary,
+    resumeSkillCategories: form.resumeSkillCategories,
+    resumeInterests: form.resumeInterests,
     experience: form.experience,
     education: form.education,
     jobs: form.jobs,

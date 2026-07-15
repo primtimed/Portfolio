@@ -30,15 +30,12 @@
                 @keydown.left.prevent="scrollByTile(-1)"
                 @keydown.right.prevent="scrollByTile(1)"
                 @pointerdown="onPointerDown"
-                @pointermove="onPointerMove"
-                @pointerup="onPointerUp"
-                @pointercancel="onPointerUp"
                 @click.capture="onTrackClick"
             >
                 <a
                     v-for="(game, i) in games"
                     :key="game.title"
-                    :href="game.url"
+                    :href="`/project/${projectSlug(game.title)}`"
                     target="_blank"
                     rel="noopener"
                     role="listitem"
@@ -66,7 +63,7 @@
                             <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor">
                                 <path d="M8 5v14l11-7L8 5Z" />
                             </svg>
-                            Play
+                            View Project
                         </span>
                     </span>
                 </a>
@@ -104,9 +101,10 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import RevealOnView from '@/components/ui/RevealOnView.vue';
 import { featuredGamesItchUrl as baseItchUrl } from '@/data/portfolio';
-import type { FeaturedGame } from '@/types/portfolio';
+import { projectSlug } from '@/data/projects';
+import type { Project } from '@/types/portfolio';
 
-const props = defineProps<{ games: FeaturedGame[]; itchUrl?: string }>();
+const props = defineProps<{ games: Project[]; itchUrl?: string }>();
 
 const moreUrl = computed(() => props.itchUrl ?? baseItchUrl);
 
@@ -177,6 +175,13 @@ function scrollByTile(direction: 1 | -1) {
     el.scrollBy({ left: step * direction, behavior: 'smooth' });
 }
 
+// Drag tracking deliberately avoids the Pointer Capture API: claiming capture
+// (even only once a drag is detected) retargets the browser's synthesized click
+// event away from the tile's <a>, silently breaking navigation on a plain click.
+// Window-level listeners give the same "keep tracking outside the element"
+// behavior without touching capture at all.
+let activePointerId: number | null = null;
+
 function onPointerDown(e: PointerEvent) {
     const el = trackEl.value;
     if (!el || e.pointerType !== 'mouse' || e.button !== 0) return;
@@ -188,15 +193,20 @@ function onPointerDown(e: PointerEvent) {
     lastMoveX = e.clientX;
     lastMoveTime = performance.now();
     velocityX = 0;
-    el.setPointerCapture(e.pointerId);
-    e.preventDefault();
+    activePointerId = e.pointerId;
+    window.addEventListener('pointermove', onWindowPointerMove);
+    window.addEventListener('pointerup', onWindowPointerUp);
+    window.addEventListener('pointercancel', onWindowPointerUp);
 }
 
-function onPointerMove(e: PointerEvent) {
+function onWindowPointerMove(e: PointerEvent) {
     const el = trackEl.value;
-    if (!el || !isDragging.value) return;
+    if (!el || e.pointerId !== activePointerId) return;
     const dx = e.clientX - dragStartX;
-    if (Math.abs(dx) > 3) dragMoved = true;
+    if (Math.abs(dx) > 3) {
+        dragMoved = true;
+        e.preventDefault();
+    }
     el.scrollLeft = dragStartScrollLeft - dx;
 
     const now = performance.now();
@@ -208,11 +218,13 @@ function onPointerMove(e: PointerEvent) {
     }
 }
 
-function onPointerUp(e: PointerEvent) {
-    const el = trackEl.value;
-    if (!el || !isDragging.value) return;
+function onWindowPointerUp(e: PointerEvent) {
+    if (e.pointerId !== activePointerId) return;
+    activePointerId = null;
+    window.removeEventListener('pointermove', onWindowPointerMove);
+    window.removeEventListener('pointerup', onWindowPointerUp);
+    window.removeEventListener('pointercancel', onWindowPointerUp);
     isDragging.value = false;
-    el.releasePointerCapture(e.pointerId);
     startInertia(-velocityX);
 }
 
@@ -231,6 +243,9 @@ onMounted(() => {
 
 onUnmounted(() => {
     window.removeEventListener('resize', updateEdges);
+    window.removeEventListener('pointermove', onWindowPointerMove);
+    window.removeEventListener('pointerup', onWindowPointerUp);
+    window.removeEventListener('pointercancel', onWindowPointerUp);
     stopInertia();
 });
 </script>

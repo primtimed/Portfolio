@@ -2,9 +2,8 @@ import type {
     AboutStat,
     EducationItem,
     ExperienceItem,
-    FeaturedGame,
-    FeaturedProject,
     JobItem,
+    RoadmapItem,
     SkillCategory,
 } from '@/types/portfolio';
 
@@ -36,13 +35,16 @@ export interface PortfolioCta {
 export interface PortfolioMeta {
     profile: Profile;
     aboutStats: AboutStat[];
+    roadmap: RoadmapItem[];
     focusTags: string[];
     skillCategories: SkillCategory[];
     featuredGamesItchUrl: string;
-    featuredGames: FeaturedGame[];
-    featuredProject: FeaturedProject;
+    featuredProjectSlug: string;
     featuredProjectStats: AboutStat[];
     portfolioCta: PortfolioCta;
+    resumeSummary: string[];
+    resumeSkillCategories: SkillCategory[];
+    resumeInterests: string[];
     experience: ExperienceItem[];
     education: EducationItem[];
     jobs: JobItem[];

@@ -5,16 +5,18 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\PortfolioMetaRequest;
 use App\Services\TsData\PortfolioDataFile;
+use App\Services\TsData\ProjectsDataFile;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class AdminPortfolioMetaController extends Controller
 {
-    public function edit(PortfolioDataFile $portfolio): Response
+    public function edit(PortfolioDataFile $portfolio, ProjectsDataFile $projects): Response
     {
         return Inertia::render('admin/PortfolioMeta', [
             'meta' => $portfolio->meta(),
+            'projects' => $projects->projects(),
         ]);
     }
 

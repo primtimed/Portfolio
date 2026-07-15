@@ -5,6 +5,7 @@
             >{{ label }}</span
         >
         <slot />
+        <span v-if="hint" class="mt-1 block text-xs text-(--text-faint)">{{ hint }}</span>
         <span v-if="error" class="mt-1 block text-xs text-red-400">{{
             error
         }}</span>
@@ -12,5 +13,5 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{ label: string; error?: string }>();
+defineProps<{ label: string; error?: string; hint?: string }>();
 </script>

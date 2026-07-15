@@ -45,7 +45,7 @@
         <!-- OVERVIEW -->
         <section class="cs-overview">
             <div class="cs-overview-inner">
-                <div>
+                <div class="cs-overview-text">
                     <div class="cs-eyebrow">Overview</div>
                     <h2 class="cs-h2">The Problem</h2>
                     <p class="cs-body">{{ project.description }}</p>
@@ -59,8 +59,30 @@
                     </ul>
                     <p v-else class="cs-body cs-placeholder">[Placeholder — summarize your role, the team, and the scope of what you owned end to end.]</p>
                 </div>
-                <div class="cs-overview-media">
+                <div v-if="showcaseImages.length" class="cs-showcase-grid">
+                    <div v-for="(img, i) in showcaseImages" :key="`showcase-${i}`" class="cs-showcase-item" :class="{ 'cs-showcase-item--lead': i === 0 }">
+                        <img :src="img.src" :alt="img.caption || `${project.title} showcase`" loading="lazy" />
+                    </div>
+                </div>
+                <div v-else class="cs-overview-media">
                     <img :src="project.image" :alt="`${project.title} overview`" loading="lazy" />
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTRIBUTIONS -->
+        <section class="cs-contrib">
+            <div class="cs-contrib-inner">
+                <div class="cs-contrib-text">
+                    <div class="cs-eyebrow">Contributions</div>
+                    <h2 class="cs-h2">My Contributions</h2>
+                    <div ref="contribBodyRef" class="cs-contrib-body" v-html="contributionsHtml" />
+                </div>
+                <div v-if="railImages.length" ref="contribRailRef" class="cs-contrib-rail">
+                    <div v-for="(item, i) in railImages" :key="`contrib-${i}`" class="cs-contrib-rail-item">
+                        <video v-if="item.type === 'video'" :src="item.src" muted loop autoplay playsinline />
+                        <img v-else :src="item.src" :alt="item.caption || project.title" loading="lazy" />
+                    </div>
                 </div>
             </div>
         </section>
@@ -83,24 +105,77 @@
         </section>
 
         <!-- GALLERY -->
-        <section v-if="galleryImages.length" class="cs-gallery">
+        <section v-if="remainingGalleryImages.length" class="cs-gallery">
             <div class="cs-gallery-inner">
                 <div class="cs-section-heading">
                     <div class="cs-eyebrow">Gallery</div>
                     <h2 class="cs-h2">Final Designs</h2>
                 </div>
-                <div class="cs-gallery-row cs-gallery-row-2">
-                    <div v-for="img in galleryImages.slice(0, 2)" :key="img.src" class="cs-gallery-tile cs-gallery-tile-wide">
+                <div class="cs-gallery-grid">
+                    <button
+                        v-for="(img, i) in remainingGalleryImages"
+                        :key="`${img.src}-${i}`"
+                        type="button"
+                        class="cs-gallery-tile"
+                        :class="tileVariant(i)"
+                        :aria-label="`View ${img.caption || 'image'} larger`"
+                        @click="openLightbox(i)"
+                    >
                         <img :src="img.src" :alt="img.caption" loading="lazy" />
-                    </div>
-                </div>
-                <div v-if="galleryImages.length > 2" class="cs-gallery-row cs-gallery-row-3">
-                    <div v-for="img in galleryImages.slice(2, 5)" :key="img.src" class="cs-gallery-tile">
-                        <img :src="img.src" :alt="img.caption" loading="lazy" />
-                    </div>
+                        <span v-if="img.caption" class="cs-gallery-caption">{{ img.caption }}</span>
+                    </button>
                 </div>
             </div>
         </section>
+
+        <!-- GALLERY LIGHTBOX -->
+        <Teleport to="body">
+            <div
+                v-if="lightboxIndex !== null"
+                class="cs-lightbox"
+                role="dialog"
+                aria-modal="true"
+                @click.self="closeLightbox"
+            >
+                <button type="button" class="cs-lightbox-close" aria-label="Close" @click="closeLightbox">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 5l14 14M19 5 5 19" stroke-linecap="round" />
+                    </svg>
+                </button>
+
+                <button
+                    v-if="remainingGalleryImages.length > 1"
+                    type="button"
+                    class="cs-lightbox-nav cs-lightbox-prev"
+                    aria-label="Previous image"
+                    @click="stepLightbox(-1)"
+                >
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M15 5l-7 7 7 7" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </button>
+
+                <div v-if="lightboxImage" class="cs-lightbox-frame" :class="{ 'cs-lightbox-frame--with-caption': lightboxImage.caption }">
+                    <img :src="lightboxImage.src" :alt="lightboxImage.caption" class="cs-lightbox-img" />
+                    <div v-if="lightboxImage.caption" class="cs-lightbox-caption">
+                        <span class="cs-lightbox-caption-count">{{ (lightboxIndex ?? 0) + 1 }} / {{ remainingGalleryImages.length }}</span>
+                        <p class="cs-lightbox-caption-text">{{ lightboxImage.caption }}</p>
+                    </div>
+                </div>
+
+                <button
+                    v-if="remainingGalleryImages.length > 1"
+                    type="button"
+                    class="cs-lightbox-nav cs-lightbox-next"
+                    aria-label="Next image"
+                    @click="stepLightbox(1)"
+                >
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </button>
+            </div>
+        </Teleport>
 
         <!-- OUTCOMES -->
         <section class="cs-outcomes">
@@ -130,13 +205,14 @@
 
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import SiteFooter from '@/components/layout/SiteFooter.vue';
 import SiteNav from '@/components/layout/SiteNav.vue';
 import SiteVideoBackground from '@/components/layout/SiteVideoBackground.vue';
 import { useAdminPreviewOverrides, useAdminPreviewScrollTarget } from '@/composables/useAdminPreview';
 import { profile } from '@/data/portfolio';
 import { projects, projectSlug } from '@/data/projects';
+import { renderRichText } from '@/lib/richText';
 import type { Project } from '@/types/portfolio';
 
 const props = defineProps<{ slug: string }>();
@@ -178,7 +254,114 @@ const fallbackProcessSteps = [
 
 const processSteps = computed(() => (project.value.processSteps?.length ? project.value.processSteps : fallbackProcessSteps));
 
-const galleryImages = computed(() => (project.value.media ?? []).filter((item) => item.type === 'image').slice(1));
+const galleryImages = computed(() => (project.value.media ?? []).filter((item) => item.type === 'image'));
+
+const showcaseImages = computed(() => galleryImages.value.slice(0, 5));
+
+const fallbackContributionsText = `- Designing **core systems**
+  - General
+    - [Placeholder — a foundational mechanic or system you built.]
+    - [Placeholder — another foundational piece.]
+  - Tools
+    - [Placeholder — an editor tool or pipeline you shipped.]
+  - AI
+    - [Placeholder — behavior trees, state machines, or pathfinding you configured.]
+    - [Placeholder — how many characters/entities this scales to.]
+![](/storage/Image/Profile/Profile.png)
+- Player-facing features
+  - [Placeholder — a feature you owned end to end.] **→** [Placeholder — the specific outcome or scale, e.g. "shipped to 10k+ users".]
+  - [Placeholder — a second feature you owned end to end.]
+!video[](/videos/background.mp4)
+- Polish & performance
+  - [Placeholder — a bug class you fixed or a perf win you delivered.]
+  - [Placeholder — a performance optimization and the measured improvement.]
+![](/storage/Image/Profile/Profile.png)
+- Tools & pipeline
+  - [Placeholder — an internal tool that sped up the team's workflow.]
+!video[](/videos/background.mp4)`;
+
+const contributionsHtml = computed(() => renderRichText(project.value.contributionsText || fallbackContributionsText));
+
+// The rail takes as many gallery images as fit alongside the contributions
+// text (measured, not guessed) and the Gallery section below gets the rest —
+// so the same image never appears twice.
+const contribBodyRef = ref<HTMLElement | null>(null);
+const contribRailRef = ref<HTMLElement | null>(null);
+const railVisibleCount = ref(galleryImages.value.length);
+
+function recalcRailCount() {
+    const total = galleryImages.value.length;
+    const textEl = contribBodyRef.value;
+    const railEl = contribRailRef.value;
+    const firstItem = railEl?.querySelector('.cs-contrib-rail-item');
+    if (!textEl || !firstItem) {
+        railVisibleCount.value = total;
+        return;
+    }
+    const itemHeight = firstItem.getBoundingClientRect().height;
+    if (itemHeight <= 0) return;
+    const gap = parseFloat(getComputedStyle(railEl as HTMLElement).rowGap || '0') || 0;
+    const textHeight = textEl.getBoundingClientRect().height;
+    const fitting = Math.floor((textHeight + gap) / (itemHeight + gap));
+    railVisibleCount.value = Math.min(total, Math.max(1, fitting));
+}
+
+const railImages = computed(() => galleryImages.value.slice(0, railVisibleCount.value));
+const remainingGalleryImages = computed(() => galleryImages.value.slice(railVisibleCount.value));
+
+let contribResizeObserver: ResizeObserver | null = null;
+
+onMounted(() => {
+    contribResizeObserver = new ResizeObserver(() => recalcRailCount());
+    if (contribBodyRef.value) contribResizeObserver.observe(contribBodyRef.value);
+    requestAnimationFrame(recalcRailCount);
+});
+
+onUnmounted(() => contribResizeObserver?.disconnect());
+
+// Deterministic per-index "randomness" (not Math.random) so the mosaic layout
+// stays stable across re-renders instead of reshuffling on every reactive update.
+const tileVariants = ['', 'cs-gallery-tile--wide', 'cs-gallery-tile--tall', 'cs-gallery-tile--big', 'cs-gallery-tile--small'];
+
+function tileVariant(i: number): string {
+    let hash = (i * 2654435761) >>> 0;
+    hash = (hash ^ (hash >>> 15)) >>> 0;
+    return tileVariants[hash % tileVariants.length];
+}
+
+const lightboxIndex = ref<number | null>(null);
+const lightboxImage = computed(() => (lightboxIndex.value !== null ? remainingGalleryImages.value[lightboxIndex.value] : null));
+
+function openLightbox(index: number) {
+    lightboxIndex.value = index;
+}
+
+function closeLightbox() {
+    lightboxIndex.value = null;
+}
+
+function stepLightbox(direction: 1 | -1) {
+    if (lightboxIndex.value === null || !remainingGalleryImages.value.length) return;
+    const total = remainingGalleryImages.value.length;
+    lightboxIndex.value = (lightboxIndex.value + direction + total) % total;
+}
+
+function onLightboxKeydown(e: KeyboardEvent) {
+    if (lightboxIndex.value === null) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft') stepLightbox(-1);
+    if (e.key === 'ArrowRight') stepLightbox(1);
+}
+
+watch(lightboxIndex, (index) => {
+    document.body.style.overflow = index !== null ? 'hidden' : '';
+});
+
+onMounted(() => window.addEventListener('keydown', onLightboxKeydown));
+onUnmounted(() => {
+    window.removeEventListener('keydown', onLightboxKeydown);
+    document.body.style.overflow = '';
+});
 
 const fallbackOutcomes = [
     { value: '00%', label: 'Placeholder Metric' },
@@ -192,6 +375,7 @@ const outcomes = computed(() => (project.value.outcomes?.length ? project.value.
 <style lang="scss" scoped>
 .cs-root {
     --cs-cream: #f7f3ec;
+    --cs-cream-warm: #f1e4d2;
     --cs-dark: #1c1a17;
     --cs-dark-2: #14120f;
     --cs-accent: #e2733a;
@@ -219,11 +403,11 @@ const outcomes = computed(() => (project.value.outcomes?.length ? project.value.
 .cs-hero {
     position: relative;
     background: rgba(28, 26, 23, 0.50);
-    padding: 172px 64px 90px;
+    padding: 172px 32px 90px;
     overflow: hidden;
 
     @media (max-width: 760px) {
-        padding: 140px 24px 60px;
+        padding: 140px 16px 60px;
     }
 }
 
@@ -402,23 +586,25 @@ const outcomes = computed(() => (project.value.outcomes?.length ? project.value.
 /* ── overview ───────────────────────────────────────────────────────── */
 .cs-overview {
     width: 100%;
-    background: var(--cs-cream);
+    background: var(--cs-cream-warm);
 }
 
 .cs-overview-inner {
     max-width: 1280px;
     margin: 0 auto;
-    padding: 110px 64px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 70px;
-    align-items: center;
+    padding: 110px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 56px;
 
     @media (max-width: 900px) {
-        grid-template-columns: 1fr;
-        padding: 64px 24px;
-        gap: 40px;
+        padding: 64px 16px;
+        gap: 36px;
     }
+}
+
+.cs-overview-text {
+    max-width: 760px;
 }
 
 .cs-h2 {
@@ -474,6 +660,7 @@ const outcomes = computed(() => (project.value.outcomes?.length ? project.value.
 
 .cs-overview-media {
     width: 100%;
+    max-width: 640px;
     aspect-ratio: 4 / 3;
     border-radius: 16px;
     overflow: hidden;
@@ -487,14 +674,200 @@ const outcomes = computed(() => (project.value.outcomes?.length ? project.value.
     }
 }
 
+.cs-showcase-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 220px;
+    gap: 18px;
+
+    @media (max-width: 700px) {
+        grid-template-columns: repeat(2, 1fr);
+        grid-auto-rows: 180px;
+    }
+
+    @media (max-width: 460px) {
+        grid-template-columns: 1fr;
+        grid-auto-rows: 240px;
+    }
+}
+
+.cs-showcase-item {
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(28, 26, 23, 0.12);
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    &--lead {
+        grid-column: span 2;
+        grid-row: span 2;
+
+        @media (max-width: 460px) {
+            grid-column: span 1;
+            grid-row: span 1;
+        }
+    }
+}
+
+/* ── contributions ──────────────────────────────────────────────────── */
+.cs-contrib {
+    width: 100%;
+    background: var(--cs-cream);
+    border-top: 1px solid var(--cs-border-light);
+}
+
+.cs-contrib-inner {
+    max-width: 1520px;
+    margin: 0 auto;
+    padding: 110px 24px;
+    display: grid;
+    grid-template-columns: 1fr 410px;
+    gap: 60px;
+    align-items: start;
+
+    @media (max-width: 900px) {
+        grid-template-columns: 1fr;
+        padding: 64px 16px;
+        gap: 32px;
+    }
+}
+
+.cs-contrib-text {
+    min-width: 0;
+}
+
+.cs-contrib-body {
+    margin-top: 20px;
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--cs-body);
+
+    :deep(h4) {
+        font-family: 'Archivo Black', sans-serif;
+        font-size: 14px;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        color: var(--cs-ink);
+        margin: 26px 0 10px;
+
+        &:first-child {
+            margin-top: 0;
+        }
+    }
+
+    :deep(p) {
+        margin: 0 0 16px;
+    }
+
+    :deep(ul) {
+        margin: 0 0 8px;
+        padding-left: 20px;
+        list-style: disc;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    :deep(ul ul) {
+        margin-top: 6px;
+        list-style: circle;
+    }
+
+    :deep(ul ul ul) {
+        list-style: square;
+    }
+
+    :deep(li) {
+        line-height: 1.6;
+    }
+
+    :deep(li > ul) {
+        margin-top: 6px;
+    }
+
+    :deep(strong) {
+        color: var(--cs-ink);
+        text-decoration: underline;
+        text-decoration-color: rgba(226, 115, 58, 0.5);
+        text-underline-offset: 3px;
+    }
+
+    :deep(.cs-rich-figure) {
+        width: 66%;
+        margin: 28px auto;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 20px 50px rgba(28, 26, 23, 0.12);
+
+        @media (max-width: 700px) {
+            width: 100%;
+        }
+
+        img,
+        video {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            object-fit: cover;
+            display: block;
+        }
+
+        figcaption {
+            padding: 10px 4px 0;
+            font-size: 13px;
+            color: var(--cs-muted);
+        }
+    }
+}
+
+.cs-contrib-rail {
+    position: sticky;
+    top: 110px;
+    display: flex;
+    flex-direction: column;
+    gap: 23px;
+
+    @media (max-width: 900px) {
+        position: static;
+        flex-direction: row;
+        overflow-x: auto;
+        padding-bottom: 6px;
+    }
+}
+
+.cs-contrib-rail-item {
+    flex: 0 0 auto;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 14px 34px rgba(28, 26, 23, 0.14);
+
+    img,
+    video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    @media (max-width: 900px) {
+        width: 280px;
+    }
+}
+
 /* ── process ────────────────────────────────────────────────────────── */
 .cs-process {
     position: relative;
     background: rgba(28, 26, 23, 0.50);
-    padding: 110px 64px;
+    padding: 110px 32px;
 
     @media (max-width: 700px) {
-        padding: 64px 24px;
+        padding: 64px 16px;
     }
 }
 
@@ -570,60 +943,235 @@ const outcomes = computed(() => (project.value.outcomes?.length ? project.value.
 }
 
 .cs-gallery-inner {
-    max-width: 1280px;
+    max-width: 1680px;
     margin: 0 auto;
-    padding: 110px 64px;
+    padding: 110px 32px;
 
     @media (max-width: 700px) {
-        padding: 64px 24px;
+        padding: 64px 16px;
     }
 }
 
-.cs-gallery-row {
-    display: grid;
-    gap: 24px;
-    margin-bottom: 24px;
+.cs-gallery-grid {
+    column-count: 2;
+    column-gap: 40px;
 
-    &:last-child {
-        margin-bottom: 0;
+    @media (min-width: 1500px) {
+        column-count: 3;
     }
-}
 
-.cs-gallery-row-2 {
-    grid-template-columns: 1.4fr 1fr;
-
-    @media (max-width: 700px) {
-        grid-template-columns: 1fr;
-    }
-}
-
-.cs-gallery-row-3 {
-    grid-template-columns: repeat(3, 1fr);
-
-    @media (max-width: 700px) {
-        grid-template-columns: 1fr;
+    @media (max-width: 600px) {
+        column-count: 1;
     }
 }
 
 .cs-gallery-tile {
-    aspect-ratio: 4 / 3;
-    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 0 0 40px;
+    break-inside: avoid;
+    border-radius: 20px;
     overflow: hidden;
+    background: #fff;
     box-shadow: 0 20px 50px rgba(28, 26, 23, 0.1);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition:
+        transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+
+    &:hover,
+    &:focus-visible {
+        transform: translateY(-5px) rotate(-0.3deg) scale(1.015);
+        box-shadow: 0 26px 60px rgba(28, 26, 23, 0.18);
+        outline: 2px solid var(--cs-accent);
+        outline-offset: 2px;
+    }
 
     img {
         width: 100%;
-        height: 100%;
-        object-fit: cover;
         display: block;
+        object-fit: cover;
+        aspect-ratio: 1 / 1;
+    }
+
+    &--wide img {
+        aspect-ratio: 16 / 10;
+    }
+
+    &--tall img {
+        aspect-ratio: 3 / 4;
+    }
+
+    &--big img {
+        aspect-ratio: 4 / 5;
+    }
+
+    &--small img {
+        aspect-ratio: 5 / 4;
     }
 }
 
-.cs-gallery-tile-wide {
-    aspect-ratio: 16 / 10;
+.cs-gallery-caption {
+    padding: 14px 18px;
+    text-align: left;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--cs-body);
+}
 
-    &:nth-child(2) {
-        aspect-ratio: 4 / 5;
+/* ── gallery lightbox ───────────────────────────────────────────────── */
+.cs-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 300;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 24px;
+    background: rgba(10, 9, 8, 0.97);
+}
+
+.cs-lightbox-frame {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: min(92vw, 1300px);
+    max-height: 84vh;
+}
+
+.cs-lightbox-frame--with-caption {
+    gap: 28px;
+
+    @media (max-width: 760px) {
+        flex-direction: column;
+        gap: 0;
+    }
+}
+
+.cs-lightbox-img {
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: 100%;
+    max-height: 84vh;
+    border-radius: 8px;
+    object-fit: contain;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+}
+
+.cs-lightbox-frame--with-caption .cs-lightbox-img {
+    max-height: 70vh;
+
+    @media (min-width: 761px) {
+        max-width: 68%;
+    }
+}
+
+.cs-lightbox-caption {
+    flex: 0 0 auto;
+    width: 100%;
+    max-width: 320px;
+    padding: 24px 26px;
+    border-radius: 12px;
+    background: var(--cs-cream);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+
+    @media (max-width: 760px) {
+        max-width: 100%;
+        margin-top: 16px;
+    }
+}
+
+.cs-lightbox-caption-count {
+    display: block;
+    margin-bottom: 10px;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    color: var(--cs-accent);
+}
+
+.cs-lightbox-caption-text {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--cs-body);
+}
+
+.cs-lightbox-close {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    cursor: pointer;
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+
+    &:hover {
+        background: var(--cs-accent);
+        transform: scale(1.05);
+    }
+}
+
+.cs-lightbox-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    cursor: pointer;
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+
+    &:hover {
+        background: var(--cs-accent);
+        transform: translateY(-50%) scale(1.06);
+    }
+}
+
+.cs-lightbox-prev {
+    left: 24px;
+}
+
+.cs-lightbox-next {
+    right: 24px;
+}
+
+@media (max-width: 640px) {
+    .cs-lightbox {
+        padding: 80px 16px;
+    }
+
+    .cs-lightbox-nav {
+        width: 40px;
+        height: 40px;
+    }
+
+    .cs-lightbox-prev {
+        left: 8px;
+    }
+
+    .cs-lightbox-next {
+        right: 8px;
     }
 }
 
@@ -631,10 +1179,10 @@ const outcomes = computed(() => (project.value.outcomes?.length ? project.value.
 .cs-outcomes {
     position: relative;
     background: rgba(28, 26, 23, 0.50);
-    padding: 110px 64px 130px;
+    padding: 110px 32px 130px;
 
     @media (max-width: 700px) {
-        padding: 64px 24px 80px;
+        padding: 64px 16px 80px;
     }
 }
 
