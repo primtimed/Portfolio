@@ -138,6 +138,19 @@
                             </svg>
                             Source Code
                         </a>
+                        <a
+                            v-if="project.gddUrl"
+                            :href="project.gddUrl"
+                            target="_blank"
+                            rel="noopener"
+                            class="spotlight-cta-btn"
+                        >
+                            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M7 3h7l5 5v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z" stroke-linecap="round" stroke-linejoin="round" />
+                                <path d="M14 3v5h5" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                            Game Design Document
+                        </a>
                     </div>
                 </RevealOnView>
             </div>

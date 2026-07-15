@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ProjectRequest;
 use App\Services\TsData\ProjectsDataFile;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -23,6 +24,7 @@ class AdminProjectController extends Controller
         return Inertia::render('admin/projects/Form', [
             'project' => null,
             'index' => null,
+            'gddFiles' => $this->gddFiles(),
         ]);
     }
 
@@ -31,7 +33,22 @@ class AdminProjectController extends Controller
         return Inertia::render('admin/projects/Form', [
             'project' => $projects->project($project),
             'index' => $project,
+            'gddFiles' => $this->gddFiles(),
         ]);
+    }
+
+    /**
+     * @return array<int, array{label: string, value: string}>
+     */
+    private function gddFiles(): array
+    {
+        return collect(Storage::disk('public')->files('GDD'))
+            ->map(fn (string $path) => [
+                'label' => basename($path),
+                'value' => Storage::url($path),
+            ])
+            ->values()
+            ->all();
     }
 
     public function store(ProjectRequest $request, ProjectsDataFile $projects): RedirectResponse

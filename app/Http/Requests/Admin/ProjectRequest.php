@@ -30,6 +30,7 @@ class ProjectRequest extends FormRequest
             'highlights.*' => ['nullable', 'string'],
             'url' => ['nullable', 'string'],
             'sourceUrl' => ['nullable', 'string'],
+            'gddUrl' => ['nullable', 'string'],
             'media' => ['nullable', 'array'],
             'media.*.type' => ['nullable', Rule::in(['image', 'video'])],
             'media.*.src' => ['nullable', 'string'],

@@ -15,7 +15,7 @@ export const profile = {
     "aboutCtaPrompt": "Are you interested in my work?",
     "aboutCtaLabel": "Contact me!",
     "aboutParagraphs": [
-        "**Unity Developer** with **4 years of experience** building gameplay systems and tools in **C#** and **Unity**. Experienced in **object-oriented programming**, **gameplay mechanics**, **debugging**, and **version control**. Also skilled in **PHP (Laravel)**, **TypeScript**, and **Vue 3** through professional web development experience. Currently completing a **Bachelor's degree in Creative Media & Game Technologies** and seeking a **Junior Unity Developer** position where I can contribute to gameplay programming and continue growing as a game engineer."
+        "**Unity Developer** with **4 years of experience** building gameplay systems and tools in **C#** and **Unity**. Experienced in **object-oriented programming**, **gameplay mechanics**, **debugging**, and **version control**. Also skilled in **PHP (Laravel)**, **TypeScript**, and **Vue 3** through professional web development experience. Currently completing a **degree in Creative Media & Game Technologies**."
     ]
 };
 
@@ -24,21 +24,6 @@ export const aboutStats: AboutStat[] = [
         "icon": "device",
         "value": "4+",
         "label": "YEARS EXPERIENCE"
-    },
-    {
-        "icon": "controller",
-        "value": "2",
-        "label": "Game Prototypes"
-    },
-    {
-        "icon": "package",
-        "value": "3",
-        "label": "Unity Packages"
-    },
-    {
-        "icon": "trophy",
-        "value": "1",
-        "label": "Personal Milestone"
     }
 ];
 
@@ -60,12 +45,12 @@ export const skillCategories: SkillCategory[] = [
                 "level": 4
             },
             {
-                "name": "AI",
+                "name": "AI Agents",
                 "level": 4
             },
             {
                 "name": "Input System",
-                "level": 3
+                "level": 2
             },
             {
                 "name": "Gameplay Engineering",

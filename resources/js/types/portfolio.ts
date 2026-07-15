@@ -43,6 +43,7 @@ export interface FeaturedProject {
     highlights: string[];
     url: string;
     sourceUrl?: string;
+    gddUrl?: string;
 }
 
 export interface Skill {
@@ -86,6 +87,7 @@ export interface Project {
     highlights: string[];
     url: string;
     sourceUrl?: string;
+    gddUrl?: string;
     media?: ProjectMediaItem[];
     outcomes?: ProjectStat[];
     processSteps?: ProjectProcessStep[];

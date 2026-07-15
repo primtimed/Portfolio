@@ -21,7 +21,8 @@ export const projects: Project[] = [
         "tags": [],
         "highlights": [],
         "url": "#",
-        "sourceUrl": null,
+        "sourceUrl": "123",
+        "gddUrl": "/storage/GDD/.gitkeep",
         "outcomes": [],
         "processSteps": [],
         "contributionsText": null,
@@ -64,13 +65,6 @@ export const projects: Project[] = [
             {
                 "type": "image",
                 "src": "/storage/Image/Profile/Profile.png",
-                "caption": null
-            }
-        ],
-        "contributionsMedia": [
-            {
-                "type": "video",
-                "src": "/videos/background.mp4",
                 "caption": null
             }
         ]

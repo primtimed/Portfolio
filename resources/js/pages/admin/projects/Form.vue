@@ -103,6 +103,14 @@
                                     ><AdminInput v-model="form.sourceUrl"
                                 /></AdminField>
                             </div>
+
+                            <AdminField
+                                label="Game Design Document"
+                                :error="form.errors.gddUrl"
+                                hint="Files placed in storage/app/public/GDD (served at /storage/GDD/…) show up here."
+                            >
+                                <AdminSelect v-model="form.gddUrl" :options="gddOptions" />
+                            </AdminField>
                         </AdminSection>
 
                         <AdminSection title="Overview" preview-target=".cs-overview">
@@ -260,7 +268,11 @@ type ProjectFormData = Omit<
     contributionsText: string;
 };
 
-const props = defineProps<{ project: Project | null; index: number | null }>();
+const props = defineProps<{
+    project: Project | null;
+    index: number | null;
+    gddFiles: { label: string; value: string }[];
+}>();
 
 const isEdit = computed(() => props.project !== null);
 
@@ -278,6 +290,7 @@ const blank: ProjectFormData = {
     highlights: [],
     url: '',
     sourceUrl: '',
+    gddUrl: '',
     media: [],
     outcomes: [],
     processSteps: [],
@@ -292,6 +305,7 @@ const form = useForm(
               ...props.project,
               role: props.project.role ?? '',
               backgroundVideoUrl: props.project.backgroundVideoUrl ?? '',
+              gddUrl: props.project.gddUrl ?? '',
               media: props.project.media ?? [],
               outcomes: props.project.outcomes ?? [],
               processSteps: props.project.processSteps ?? [],
@@ -302,6 +316,7 @@ const form = useForm(
 
 const statuses = ['Prototype', 'In Development', 'Released'];
 const mediaTypes = ['image', 'video'];
+const gddOptions = computed(() => [{ label: '— None —', value: '' }, ...props.gddFiles]);
 
 const devices = [
     { key: 'desktop' as const, label: 'Desktop' },
@@ -331,6 +346,7 @@ useAdminPreviewPublisher('project', previewFrame, () => ({
         highlights: form.highlights,
         url: form.url,
         sourceUrl: form.sourceUrl,
+        gddUrl: form.gddUrl,
         media: form.media,
         outcomes: form.outcomes,
         processSteps: form.processSteps,
